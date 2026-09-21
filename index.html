@@ -1,1176 +1,681 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三觀與生活合拍度測驗 | Couple Values & Lifestyle Quiz</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js for Radar Chart -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff5f3',
-                            100: '#ffe6e1',
-                            200: '#fdd0c7',
-                            300: '#fba796',
-                            400: '#f7755f',
-                            500: '#e0533c',
-                            600: '#cc3b25',
-                            700: '#aa2f1b',
-                            800: '#8c2b1c',
-                            900: '#74291d',
-                        },
-                        slateDark: '#1e293b',
-                        warmBG: '#faf8f5',
-                        cardBG: '#ffffff',
-                    },
-                    fontFamily: {
-                        serif: ['"Noto Serif TC"', 'serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #faf8f5;
-            color: #334155;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        .serif-title {
-            font-family: 'Noto Serif TC', serif;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 10px 30px -5px rgba(224, 83, 60, 0.05);
-        }
-        .option-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .option-card:hover {
-            transform: translateY(-2px);
-            border-color: #f7755f;
-        }
-        .option-card.selected {
-            border-color: #e0533c;
-            background-color: #fff5f3;
-            box-shadow: 0 0 0 2px rgba(224, 83, 60, 0.2);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雙人三觀與生活契合度深度測驗</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+    .option-btn {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-btn:hover {
+      transform: translateY(-2px);
+      border-color: #6366f1;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.25);
+    }
+    .option-btn.selected {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      border-color: #818cf8;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+    }
+    .progress-bar-fill {
+      transition: width 0.4s ease-out;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-brand-100 selection:text-brand-800">
+<body class="p-4 md:p-8 flex items-center justify-center min-h-screen">
 
+  <div class="max-w-3xl w-full mx-auto">
     <!-- Header -->
-    <header class="w-full border-b border-stone-200/60 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="app.resetToHome()">
-                <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center text-white shadow-sm shadow-brand-500/30">
-                    <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
-                </div>
-                <div>
-                    <h1 class="serif-title font-bold text-lg text-stone-800 leading-tight">心靈光譜</h1>
-                    <p class="text-[10px] text-stone-400 font-medium tracking-wider uppercase">Couple Values Quiz</p>
-                </div>
-            </div>
-            <div id="nav-actions" class="text-xs font-medium text-stone-500">
-                <!-- Dynamic status pills inserted by JS -->
-            </div>
-        </div>
+    <header class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-3 text-sm font-medium">
+        <i class="fa-solid fa-heart-pulse"></i> 深度價值觀光譜比對
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 mb-2">
+        雙人三觀與生活契合度測驗
+      </h1>
+      <p class="text-slate-400 text-sm md:text-base">涵蓋 12 大深度人生維度，捕捉微小的價值觀光譜差異</p>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 flex flex-col justify-center">
+    <!-- App Container -->
+    <main id="app-container" class="glass-card rounded-2xl p-6 md:p-10 relative overflow-hidden">
 
-        <!-- VIEW 1: HOME / LANDING PAGE -->
-        <section id="view-home" class="space-y-8 max-w-2xl mx-auto text-center">
-            <div class="space-y-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 text-brand-700">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5 mr-1"></i> 雙人深度溝通與價值觀探索
-                </span>
-                <h2 class="serif-title text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
-                    你們的三觀，真的合拍嗎？
-                </h2>
-                <p class="text-stone-600 text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
-                    涵蓋金錢哲學、職涯平衡、感情界線與衝突溝通 10 大深層情境問題。拒絕簡單二分法，用深度光譜解析你們的靈魂契合度。
-                </p>
-            </div>
+      <!-- View 1: Welcome & Setup -->
+      <div id="view-welcome" class="space-y-6">
+        <div id="mode-banner" class="p-4 rounded-xl bg-indigo-950/60 border border-indigo-500/30 text-indigo-200 text-sm flex items-start gap-3 hidden">
+          <i class="fa-solid fa-circle-info text-indigo-400 text-lg mt-0.5"></i>
+          <div>
+            <span class="font-bold block text-indigo-100">已經收到對方的邀請答案！</span>
+            你正在回答對方的發起鏈結。完成全部 12 題後，系統將會為你們進行雙向比對並產出合拍報告。
+          </div>
+        </div>
 
-            <!-- Card Mode Selector -->
-            <div class="glass-card rounded-2xl p-6 text-left space-y-6">
-                <h3 class="text-xs font-bold text-stone-400 uppercase tracking-widest">選擇測驗方式</h3>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button onclick="app.selectMode('same_device')" id="btn-mode-same" class="p-4 rounded-xl border-2 border-stone-200 text-left transition hover:border-brand-300 focus:outline-none flex flex-col justify-between h-32 relative overflow-hidden group">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <i data-lucide="smartphone" class="w-6 h-6 text-brand-500"></i>
-                                <span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-brand-500"></span>
-                            </div>
-                            <div class="font-bold text-stone-800 text-sm">同裝置接力測驗</div>
-                            <div class="text-xs text-stone-500 mt-1">在一台手機/電腦上，由雙方輪流完成答題。</div>
-                        </div>
-                    </button>
+        <div class="text-center py-4">
+          <div class="w-20 h-20 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-500/30 text-indigo-400 text-3xl">
+            <i class="fa-solid fa-compass"></i>
+          </div>
+          <h2 class="text-xl font-bold text-slate-100 mb-2">測驗說明與設定</h2>
+          <p class="text-slate-300 text-sm max-w-lg mx-auto leading-relaxed">
+            本測驗包含 12 道情境情境題，每題皆有 5 個代表不同傾向的選項。請根據你「最真實的內心想法」選擇，而非選出標準答案。
+          </p>
+        </div>
 
-                    <button onclick="app.selectMode('code_share')" id="btn-mode-code" class="p-4 rounded-xl border-2 border-stone-200 text-left transition hover:border-brand-300 focus:outline-none flex flex-col justify-between h-32 relative overflow-hidden group">
-                        <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <i data-lucide="share-2" class="w-6 h-6 text-brand-500"></i>
-                                <span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-brand-500"></span>
-                            </div>
-                            <div class="font-bold text-stone-800 text-sm">異地代碼比對</div>
-                            <div class="text-xs text-stone-500 mt-1">各自填寫，完成後產生「答案代碼」互相進行匯入比對。</div>
-                        </div>
-                    </button>
-                </div>
+        <div class="space-y-4 max-w-md mx-auto">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1">你的暱稱 / 稱呼</label>
+            <input type="text" id="user-name" placeholder="例如：Alex" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+          </div>
 
-                <!-- Player Information Input -->
-                <div id="player-input-section" class="space-y-4 pt-2 border-t border-stone-100">
-                    <div id="p1-input-block" class="space-y-1.5">
-                        <label class="text-xs font-semibold text-stone-700 block">第一位測驗者暱稱 (Player 1)</label>
-                        <input type="text" id="input-p1-name" placeholder="例如：Alex" class="w-full px-4 py-2.5 rounded-lg border border-stone-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-sm outline-none transition">
-                    </div>
-                    <div id="p2-input-block" class="space-y-1.5 hidden">
-                        <label class="text-xs font-semibold text-stone-700 block">第二位測驗者暱稱 (Player 2)</label>
-                        <input type="text" id="input-p2-name" placeholder="例如：Taylor" class="w-full px-4 py-2.5 rounded-lg border border-stone-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-sm outline-none transition">
-                    </div>
-                </div>
+          <button id="btn-start" class="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/30 transition text-lg flex items-center justify-center gap-2">
+            開始回答題目 <i class="fa-solid fa-arrow-right text-sm"></i>
+          </button>
+        </div>
 
-                <!-- Code Import Area (Conditional) -->
-                <div id="import-code-block" class="hidden space-y-2 pt-2 border-t border-stone-100">
-                    <label class="text-xs font-semibold text-stone-700 block">匯入伴侶的「答案代碼」 (選填，若已有代碼請貼上)</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="input-partner-code" placeholder="貼上對方產生的代碼..." class="flex-1 px-4 py-2 rounded-lg border border-stone-200 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none font-mono">
-                        <button onclick="app.importPartnerCode()" class="px-4 py-2 bg-stone-800 text-white rounded-lg text-xs font-semibold hover:bg-stone-700 transition">驗證代碼</button>
-                    </div>
-                    <p id="code-status-msg" class="text-xs text-emerald-600 hidden flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 已成功匯入伴侶的作答數據！</p>
-                </div>
+        <div id="import-box" class="pt-6 border-t border-slate-800 text-center">
+          <p class="text-xs text-slate-400 mb-2">如果你手邊有對方傳給你的「合拍結果代碼」，可在下方查看：</p>
+          <div class="flex gap-2 max-w-md mx-auto">
+            <input type="text" id="import-code" placeholder="貼上合拍結果代碼..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200">
+            <button id="btn-import" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600">載入報告</button>
+          </div>
+        </div>
+      </div>
 
-                <button onclick="app.startQuiz()" class="w-full py-3.5 px-6 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-lg shadow-brand-500/25 transition transform active:scale-[0.99] flex items-center justify-center gap-2">
-                    <span>開始測驗</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </section>
+      <!-- View 2: Quiz -->
+      <div id="view-quiz" class="hidden space-y-6">
+        <!-- Progress Bar -->
+        <div>
+          <div class="flex justify-between text-xs text-slate-400 mb-2 font-medium">
+            <span id="quiz-progress-text">問題 1 / 12</span>
+            <span id="quiz-category-tag" class="text-indigo-400 font-semibold">【消費與儲蓄哲學】</span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 progress-bar-fill" style="width: 8.33%"></div>
+          </div>
+        </div>
 
-        <!-- VIEW 2: QUESTIONNAIRE -->
-        <section id="view-quiz" class="hidden max-w-2xl mx-auto w-full space-y-6">
-            <!-- Progress Bar & Category Header -->
-            <div class="space-y-3">
-                <div class="flex items-center justify-between text-xs font-semibold">
-                    <span id="quiz-player-tag" class="px-2.5 py-1 bg-stone-800 text-white rounded-full">Alex 的答題回合</span>
-                    <span id="quiz-progress-text" class="text-stone-400">問題 1 / 10</span>
-                </div>
-                <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                    <div id="quiz-progress-bar" class="bg-brand-500 h-full w-0 transition-all duration-300"></div>
-                </div>
-            </div>
+        <!-- Question Title -->
+        <div class="py-2">
+          <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-100 leading-snug">
+            載入問題中...
+          </h3>
+        </div>
 
-            <!-- Question Card -->
-            <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
-                <!-- Category Badge -->
-                <div class="flex items-center gap-2">
-                    <span id="q-category-icon" class="p-1.5 bg-brand-100 text-brand-700 rounded-md">
-                        <i data-lucide="compass" class="w-4 h-4"></i>
-                    </span>
-                    <span id="q-category-name" class="text-xs font-bold text-stone-500 uppercase tracking-wider">維度類別</span>
-                </div>
+        <!-- Options Container -->
+        <div id="options-container" class="space-y-3">
+          <!-- Options injected via JS -->
+        </div>
 
-                <!-- Question Text -->
-                <h3 id="q-title" class="serif-title text-xl sm:text-2xl font-bold text-stone-900 leading-snug">
-                    載入問題中...
-                </h3>
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+          <button id="btn-prev" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-chevron-left text-xs"></i> 上一題
+          </button>
+          <span class="text-xs text-slate-500">選擇最符合你心境的選項</span>
+          <button id="btn-next" disabled class="px-6 py-2.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1">
+            下一題 <i class="fa-solid fa-chevron-right text-xs"></i>
+          </button>
+        </div>
+      </div>
 
-                <!-- Options List -->
-                <div id="q-options-container" class="space-y-3">
-                    <!-- Dynamic Options JS Injection -->
-                </div>
-            </div>
+      <!-- View 3: Single Completed (Waiting for Partner) -->
+      <div id="view-single-done" class="hidden text-center py-6 space-y-6">
+        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl border border-emerald-500/30">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-100">你的回答已順利完成！</h2>
+        <p class="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
+          系統已將你的回答加密打包成專屬連結。現在，請將這條連結傳給你的另一半或對象填寫！
+        </p>
 
-            <!-- Navigation Controls -->
-            <div class="flex justify-between items-center pt-2">
-                <button id="btn-prev-q" onclick="app.prevQuestion()" class="px-4 py-2 rounded-lg border border-stone-300 text-stone-600 text-xs font-semibold hover:bg-stone-100 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1">
-                    <i data-lucide="chevron-left" class="w-4 h-4"></i> 上一題
-                </button>
-                <button id="btn-next-q" onclick="app.nextQuestion()" class="px-5 py-2.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold shadow transition flex items-center gap-1">
-                    <span>下一題</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </section>
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-700 max-w-md mx-auto space-y-3">
+          <div class="text-xs text-slate-400 font-mono break-all p-2 rounded bg-slate-950 border border-slate-800" id="share-link-text">
+            生成中...
+          </div>
+          <button id="btn-copy-link" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-link"></i> 複製專屬測驗連結傳給對方
+          </button>
+        </div>
 
-        <!-- VIEW 3: TRANSITION / INTERMEDIATE SCREEN -->
-        <section id="view-transition" class="hidden max-w-lg mx-auto text-center space-y-6 glass-card p-8 rounded-2xl">
-            <div class="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto">
-                <i data-lucide="user-check" class="w-8 h-8"></i>
-            </div>
-            <div class="space-y-2">
-                <h3 class="serif-title text-2xl font-bold text-stone-900" id="trans-title">第一位回答完成！</h3>
-                <p id="trans-desc" class="text-sm text-stone-600 leading-relaxed">
-                    請將裝置交給第二位回答者，或是複製您的答案代碼傳送給對方。
-                </p>
-            </div>
+        <div class="pt-4 text-xs text-slate-500">
+          對方填寫完成後，系統會引導對方將「合拍結果」連結或代碼傳回給你！
+        </div>
+      </div>
 
-            <!-- Same Device Switch Option -->
-            <div id="trans-same-device" class="space-y-3 pt-4 border-t border-stone-100">
-                <button onclick="app.startPartnerTurn()" class="w-full py-3 bg-brand-500 text-white font-semibold rounded-xl hover:bg-brand-600 transition shadow">
-                    開始第二位 (<span id="partner-name-display">Partner</span>) 的答題
-                </button>
-            </div>
+      <!-- View 4: Both Completed (Result Report) -->
+      <div id="view-result" class="hidden space-y-8">
+        <!-- Score Banner -->
+        <div class="text-center space-y-2">
+          <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold">
+            <span id="res-names">Alex & Partner</span> 的合拍報告
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400" id="res-score">
+              0
+            </span>
+            <span class="text-2xl font-bold text-slate-400">%</span>
+          </div>
+          <p id="res-comment" class="text-base font-medium text-slate-200">正在分析報告...</p>
+        </div>
 
-            <!-- Code Export Option -->
-            <div id="trans-code-export" class="space-y-3 pt-4 border-t border-stone-100">
-                <label class="text-xs font-bold text-stone-400 uppercase tracking-widest block text-left">您的專屬答案代碼</label>
-                <div class="flex gap-2">
-                    <input type="text" id="export-code-input" readonly class="flex-1 bg-stone-50 px-3 py-2 border rounded-lg text-xs font-mono text-stone-700 select-all">
-                    <button onclick="app.copyCode()" class="px-4 py-2 bg-stone-800 text-white text-xs font-semibold rounded-lg hover:bg-stone-700 transition flex items-center gap-1">
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> 複製代碼
-                    </button>
-                </div>
-                <p class="text-xs text-stone-400 text-left">將此代碼傳給對方，對方在首頁貼上即可完成兩人的契合度比對。</p>
-            </div>
-        </section>
+        <!-- Radar Chart Container -->
+        <div class="bg-slate-900/60 p-4 md:p-6 rounded-2xl border border-slate-800">
+          <h4 class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-indigo-400"></i> 12 大維度相干分析雷達圖
+          </h4>
+          <div class="w-full max-w-md mx-auto aspect-square">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
 
-        <!-- VIEW 4: REPORT & DASHBOARD -->
-        <section id="view-report" class="hidden space-y-8 max-w-3xl mx-auto w-full">
-            <!-- Header Result Card -->
-            <div id="report-header-card" class="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6 relative overflow-hidden">
-                <div class="absolute -top-12 -right-12 w-40 h-40 bg-brand-100/50 rounded-full blur-2xl pointer-events-none"></div>
-                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-brand-200/30 rounded-full blur-2xl pointer-events-none"></div>
+        <!-- Breakdown List -->
+        <div class="space-y-4">
+          <h4 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass-chart text-indigo-400"></i> 詳細維度差異分析
+          </h4>
+          <div id="breakdown-list" class="space-y-3">
+            <!-- Injected via JS -->
+          </div>
+        </div>
 
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-semibold">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                    <span id="report-names">Alex & Taylor</span> 的三觀契合度報告
-                </div>
+        <!-- Share Result Section -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-3">
+          <p class="text-xs text-slate-400">若對方還沒看過結果，你可以複製下方「合拍結果連結」傳回給對方：</p>
+          <button id="btn-copy-result-link" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold rounded-lg text-sm transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-share-nodes"></i> 複製合拍結果連結傳給對方
+          </button>
+        </div>
 
-                <!-- Big Score Display -->
-                <div class="space-y-2">
-                    <div class="flex items-baseline justify-center gap-1">
-                        <span id="score-percentage" class="serif-title text-6xl sm:text-7xl font-extrabold text-stone-900 tracking-tight">--</span>
-                        <span class="text-2xl font-bold text-brand-500">%</span>
-                    </div>
-                    <p id="score-tagline" class="text-lg font-bold text-brand-600 serif-title">靈魂共鳴者</p>
-                    <p id="score-description" class="text-xs sm:text-sm text-stone-600 max-w-md mx-auto leading-relaxed">
-                        分析計算中...
-                    </p>
-                </div>
-
-                <!-- Dimension Progress Quick View -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-stone-100 text-left">
-                    <div class="bg-stone-50/80 p-3 rounded-xl border border-stone-100">
-                        <div class="text-[11px] text-stone-400 font-semibold mb-1">金錢觀念</div>
-                        <div id="dim-score-money" class="text-sm font-bold text-stone-800">--%</div>
-                    </div>
-                    <div class="bg-stone-50/80 p-3 rounded-xl border border-stone-100">
-                        <div class="text-[11px] text-stone-400 font-semibold mb-1">人生價值</div>
-                        <div id="dim-score-life" class="text-sm font-bold text-stone-800">--%</div>
-                    </div>
-                    <div class="bg-stone-50/80 p-3 rounded-xl border border-stone-100">
-                        <div class="text-[11px] text-stone-400 font-semibold mb-1">感情與家庭</div>
-                        <div id="dim-score-family" class="text-sm font-bold text-stone-800">--%</div>
-                    </div>
-                    <div class="bg-stone-50/80 p-3 rounded-xl border border-stone-100">
-                        <div class="text-[11px] text-stone-400 font-semibold mb-1">生活與溝通</div>
-                        <div id="dim-score-lifestyle" class="text-sm font-bold text-stone-800">--%</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Radar Chart Analysis -->
-            <div class="glass-card rounded-2xl p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h4 class="serif-title font-bold text-stone-900 text-lg flex items-center gap-2">
-                        <i data-lucide="radar" class="w-5 h-5 text-brand-500"></i>
-                        維度剖面分析 (Radar Chart)
-                    </h4>
-                    <span class="text-xs text-stone-400">四維角度透視</span>
-                </div>
-                <div class="w-full h-64 sm:h-80 flex items-center justify-center">
-                    <canvas id="radarChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Deep Dive Analysis Tabs / Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Sweet Spots Card -->
-                <div class="glass-card rounded-2xl p-6 space-y-4 border-l-4 border-l-emerald-500">
-                    <div class="flex items-center gap-2">
-                        <div class="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
-                            <i data-lucide="star" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-stone-900 text-base">🌟 超級默契點 (Sweet Spots)</h4>
-                            <p class="text-xs text-stone-500">雙方高度共識的領域</p>
-                        </div>
-                    </div>
-                    <div id="sweet-spots-list" class="space-y-3 text-xs text-stone-600">
-                        <!-- Dynamic Injection -->
-                    </div>
-                </div>
-
-                <!-- Friction Points Card -->
-                <div class="glass-card rounded-2xl p-6 space-y-4 border-l-4 border-l-amber-500">
-                    <div class="flex items-center gap-2">
-                        <div class="p-2 bg-amber-100 text-amber-700 rounded-lg">
-                            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-stone-900 text-base">⚠️ 潛在磨合點 (Friction Points)</h4>
-                            <p class="text-xs text-stone-500">觀念分歧需要溝通與包容</p>
-                        </div>
-                    </div>
-                    <div id="friction-points-list" class="space-y-3 text-xs text-stone-600">
-                        <!-- Dynamic Injection -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Detail Breakdown Table/List -->
-            <div class="glass-card rounded-2xl p-6 space-y-4">
-                <h4 class="serif-title font-bold text-stone-900 text-lg flex items-center gap-2">
-                    <i data-lucide="list-checks" class="w-5 h-5 text-brand-500"></i>
-                    逐題詳細對照與建議
-                </h4>
-                <div id="detailed-comparison-list" class="space-y-4 divide-y divide-stone-100">
-                    <!-- Dynamic Breakdown -->
-                </div>
-            </div>
-
-            <!-- Actions Footers -->
-            <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button onclick="app.resetToHome()" class="flex-1 py-3 px-4 rounded-xl border border-stone-300 font-semibold text-stone-700 hover:bg-stone-100 text-xs transition flex items-center justify-center gap-2">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> 重新測試
-                </button>
-                <button onclick="window.print()" class="flex-1 py-3 px-4 rounded-xl bg-stone-800 text-white font-semibold hover:bg-stone-700 text-xs transition shadow flex items-center justify-center gap-2">
-                    <i data-lucide="printer" class="w-4 h-4"></i> 列印 / 儲存 PDF 報告
-                </button>
-            </div>
-        </section>
+        <div class="text-center pt-2">
+          <button id="btn-restart" class="px-6 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 border border-slate-700 hover:border-slate-500 rounded-lg transition">
+            重新開局測驗
+          </button>
+        </div>
+      </div>
 
     </main>
+  </div>
 
-    <!-- Footer -->
-    <footer class="w-full border-t border-stone-200/60 py-6 text-center text-xs text-stone-400 bg-stone-50">
-        <p>© 2026 心靈光譜 Couples Compatibility Tool • 尊重差異，理性溝通</p>
-    </footer>
+  <script>
+    // 12 Deep & Broad Questions with 5 Spectrum Options (Scores 1 to 5)
+    const questions = [
+      {
+        id: 0,
+        category: "消費與儲蓄哲學",
+        title: "當有一筆額外的獎金或收入時，你最傾向如何處置？",
+        options: [
+          { score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" },
+          { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" },
+          { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" },
+          { score: 4, text: "大部分用於犒賞自己（旅行、奢侈品、體驗）" },
+          { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }
+        ]
+      },
+      {
+        id: 1,
+        category: "職涯與生活平衡",
+        title: "關於工作與生活的理想平衡，你的真實心態是？",
+        options: [
+          { score: 1, text: "事業優先，為實現目標與成就感願意犧牲大部分休閒" },
+          { score: 2, text: "積極打拼，但希望加班與休假能維持在可控範圍" },
+          { score: 3, text: "界線分明，上班全力以赴，下班徹底關閉工作模式" },
+          { score: 4, text: "生活為主，工作只是維持經濟基礎的工具" },
+          { score: 5, text: "追求自由斜槓，拒絕傳統高壓工作，重視時間自主" }
+        ]
+      },
+      {
+        id: 2,
+        category: "家庭與長輩界線",
+        title: "結婚或長期交往後，與雙方原生家庭的邊界該如何設定？",
+        options: [
+          { score: 1, text: "密切維繫，希望常聚會，甚至同住或鄰近居住" },
+          { score: 2, text: "每週固定聚會，長輩意見應作為重要決策參考" },
+          { score: 3, text: "保持友善且適度距離，節慶聚會，彼此尊重不干涉" },
+          { score: 4, text: "獨立性極高，小家庭決策100%自主，長輩不過問" },
+          { score: 5, text: "盡量減少不必要的家庭聚會，以個人生活圈為主" }
+        ]
+      },
+      {
+        id: 3,
+        category: "衝突與溝通模式",
+        title: "當兩人發生嚴重爭執或情緒對立時，你通常的處理習慣是？",
+        options: [
+          { score: 1, text: "必須當場講清楚說明白，不解決不睡覺" },
+          { score: 2, text: "希望冷靜10分鐘後，當天立刻溝通還原問題" },
+          { score: 3, text: "各自冷靜幾個小時或隔天，待情緒平復再理性討論" },
+          { score: 4, text: "習慣先退讓冷處理，等時間淡化情緒再視情況提" },
+          { score: 5, text: "傾向避免正面衝突，以文字訊息溝通或保持沉默" }
+        ]
+      },
+      {
+        id: 4,
+        category: "社群與異性界線",
+        title: "交往期間，關於與異性朋友（或前任）的互動邊界？",
+        options: [
+          { score: 1, text: "嚴格界線，不可單獨出遊，且應完全斷絕與前任聯絡" },
+          { score: 2, text: "可正常社交，但單獨見面需報備，與前任保持距離" },
+          { score: 3, text: "只要坦誠公開，不介意對方與異性單獨吃飯或聯絡" },
+          { score: 4, text: "給予完全信任，無需特別報備朋友社交行程" },
+          { score: 5, text: "認為前任也能做普通朋友，界線全憑個人自律" }
+        ]
+      },
+      {
+        id: 5,
+        category: "育兒與家庭藍圖",
+        title: "對於未來是否生育子女與照顧責任的看法？",
+        options: [
+          { score: 1, text: "一定要有小孩，且願意為孩子大幅調整職涯與生活" },
+          { score: 2, text: "希望有小孩，但需在經濟與生活條件成熟時規劃" },
+          { score: 3, text: "順其自然，有或沒有都能接受，兩人世界也很好" },
+          { score: 4, text: "傾向不生（丁克族），更想享受自由與兩人生活" },
+          { score: 5, text: "堅決不生，比起小孩更想養寵物或專注自我" }
+        ]
+      },
+      {
+        id: 6,
+        category: "住居與生活型態",
+        title: "關於未來理想的居住地與生活居住環境？",
+        options: [
+          { score: 1, text: "繁華市中心高樓大廈，生活機能與便利性第一" },
+          { score: 2, text: "蛋白區或交通方便的住宅區，兼顧機能與空間" },
+          { score: 3, text: "獨棟或寧靜社區，不在乎生活機能，重視生活品質" },
+          { score: 4, text: "郊區或靠近自然，希望有大空間或庭院" },
+          { score: 5, text: "不拘泥於買房，喜歡租屋隨時體驗不同城市或國家" }
+        ]
+      },
+      {
+        id: 7,
+        category: "金錢安全感與風險",
+        title: "對於投資理財與財務風險的承受態度？",
+        options: [
+          { score: 1, text: "極度保守，只選定存、儲蓄險或保守債券" },
+          { score: 2, text: "穩健為主，以高股息ETF、房地產等低波動為主" },
+          { score: 3, text: "均衡配置，定期定額大盤指數與部分個股" },
+          { score: 4, text: "積極追求報酬，願意嘗試飆股、期貨或創業" },
+          { score: 5, text: "高風險高回報，關注高波動資產（如加密貨幣等）" }
+        ]
+      },
+      {
+        id: 8,
+        category: "情趣與親密關係",
+        title: "親密關係（如肢體接觸、性生活）在感情中的重要性與頻率需求？",
+        options: [
+          { score: 1, text: "極度重要，是維繫感情核心，需高頻率與創意" },
+          { score: 2, text: "相當重要，是表達愛意的關鍵方式，希望定期維持" },
+          { score: 3, text: "中等重要，視工作疲累與心情狀況靈活調整" },
+          { score: 4, text: "心靈契合重於肉體，頻率低一些完全沒關係" },
+          { score: 5, text: "不太在意，認為生活默契與陪伴遠比親密行為重要" }
+        ]
+      },
+      {
+        id: 9,
+        category: "信仰與價值理念",
+        title: "若雙方在宗教信仰、政治立場或社會議題看法不同時？",
+        options: [
+          { score: 1, text: "必須價值觀一致，無法接受立場大相逕庭的伴侶" },
+          { score: 2, text: "可以不同，但希望對方能尊重並配合參與自己的活動" },
+          { score: 3, text: "各自獨立，平時各自表達，但不強求改變對方" },
+          { score: 4, text: "盡量在生活中避開爭議話題，求同存異即可" },
+          { score: 5, text: "覺得立場不同更有趣，喜歡深度辯論與思想碰撞" }
+        ]
+      },
+      {
+        id: 10,
+        category: "旅行與休閒哲學",
+        title: "規劃一趟休假旅行時，你最渴望的模式是？",
+        options: [
+          { score: 1, text: "精密行程表，景點美食按時按點高效率解鎖" },
+          { score: 2, text: "重點景點規劃好，中間保留適度彈性時間" },
+          { score: 3, text: "漫遊度假，住在高檔飯店放空，不排強迫性景點" },
+          { score: 4, text: "戶外冒險，露營、登山或探索非主流秘境" },
+          { score: 5, text: "完全隨興，到了當地再決定當天要做什麼" }
+        ]
+      },
+      {
+        id: 11,
+        category: "情緒價值與支持",
+        title: "當你在外面遇到挫折或低潮時，最希望伴侶提供什麼？",
+        options: [
+          { score: 1, text: "理性的分析與解決方案，幫我釐清點出問題" },
+          { score: 2, text: "先給我一個大擁抱與情緒安撫，隨後幫我分析" },
+          { score: 3, text: "純粹的無條件站在我這邊，同仇敵儾聽我傾訴" },
+          { score: 4, text: "什麼都不用多說，默默陪伴或帶我去吃好吃的" },
+          { score: 5, text: "給我獨處的時間與空間，讓我自己消化處理" }
+        ]
+      }
+    ];
 
-    <script>
-        /**
-         * Comprehensive Question Dataset (10 Deep Multi-layered Scenario Questions)
-         */
-        const QUESTIONS_DATA = [
-            {
-                id: 'q1',
-                category: 'money',
-                categoryName: '金錢觀念',
-                icon: 'wallet',
-                title: '當你們決定攜手邁入長期穩定生活（或結婚），你們偏好的財務管理模式是？',
-                options: [
-                    {
-                        text: '完全獨立 (AA制)：各自管理個人資產與薪水，共同開銷按項目嚴格平分或各自負擔。',
-                        tag: 'A',
-                        weights: { independence: 1.0, joint: 0.0, balance: 0.3 }
-                    },
-                    {
-                        text: '比例分攤：建立共同家庭基金，按兩人收入比例（如 6:4）撥入，其餘為個人自由可支配資金。',
-                        tag: 'B',
-                        weights: { independence: 0.6, joint: 0.5, balance: 0.9 }
-                    },
-                    {
-                        text: '完全合併：兩人的薪水統籌入大水庫，統一規畫理財與開銷，不再區分這是「你的」或「我的」錢。',
-                        tag: 'C',
-                        weights: { independence: 0.0, joint: 1.0, balance: 0.2 }
-                    },
-                    {
-                        text: '單一主導分工：一方負責絕大部分的家庭固定大筆開銷，另一方負責日常彈性小開銷或專心理財。',
-                        tag: 'D',
-                        weights: { independence: 0.3, joint: 0.7, balance: 0.5 }
-                    }
-                ],
-                tips: '財務分工無絕對優劣，核心在於安全感來源不同：一方看重「個人獨立自主」，另一方看重「共同體歸屬感」。'
-            },
-            {
-                id: 'q2',
-                category: 'money',
-                categoryName: '金錢觀念',
-                icon: 'trending-up',
-                title: '關於奢侈品、高單價興趣或享樂型消費（如昂貴旅行、高端電子產品），你的消費哲學是？',
-                options: [
-                    {
-                        text: '實用至上：極度看重CP值與儲蓄率，非必要消費能省則省，體驗應追求質感而非價格。',
-                        tag: 'A',
-                        weights: { luxury: 0.1, saving: 0.9 }
-                    },
-                    {
-                        text: '預算控管：只要達到既定儲蓄/投資目標，剩下的預算可以盡情享受奢侈消費，不需感到罪惡。',
-                        tag: 'B',
-                        weights: { luxury: 0.6, saving: 0.7 }
-                    },
-                    {
-                        text: '及時行樂：人生苦短，創造美好回憶與享受當下品質遠比戶頭裡的數字重要，花錢能帶來動力。',
-                        tag: 'C',
-                        weights: { luxury: 0.9, saving: 0.2 }
-                    },
-                    {
-                        text: '獎勵導向：平時生活節儉，但遇到重大里程碑（如周年紀念、完成大專案）時願意重金犒賞自己。',
-                        tag: 'D',
-                        weights: { luxury: 0.5, saving: 0.6 }
-                    }
-                ],
-                tips: '消費差異常引發日常摩擦，建議設立「免審核個人自由消費額度」，既尊重個人興趣又不影響整體存款。'
-            },
-            {
-                id: 'q3',
-                category: 'life',
-                categoryName: '人生觀與職涯',
-                icon: 'compass',
-                title: '面對工作與生活的平衡 (Work-Life Balance)，你目前的價值觀優先順序是？',
-                options: [
-                    {
-                        text: '事業突破期：願意為職涯快速成長、創業或升遷犧牲個人時間與休假，希望伴侶給予充分理解。',
-                        tag: 'A',
-                        weights: { ambition: 0.9, relaxation: 0.2 }
-                    },
-                    {
-                        text: '嚴格界線型：工作只是獲取經濟來源的工具，時間一到準時下班，生活與陪伴家人才是真正的重心。',
-                        tag: 'B',
-                        weights: { ambition: 0.2, relaxation: 0.9 }
-                    },
-                    {
-                        text: '動態平衡型：視階段而定，平常享受平穩生活，但特定關鍵時期願意全力衝刺，雙方需定期協商。',
-                        tag: 'C',
-                        weights: { ambition: 0.6, relaxation: 0.6 }
-                    },
-                    {
-                        text: '靈魂追求型：比起職位高低或薪水，更看重工作是否具備自我實現的意義，哪怕收入較不穩定。',
-                        tag: 'D',
-                        weights: { ambition: 0.7, relaxation: 0.5 }
-                    }
-                ],
-                tips: '若一方追求事業衝刺而另一方追求安穩陪伴，需要定期溝通「階段性陪伴時間」的最低底線。'
-            },
-            {
-                id: 'q4',
-                category: 'life',
-                categoryName: '人生觀與風險',
-                icon: 'shield-alert',
-                title: '面對人生重大決策（如換跑道、移居異地、創業或大筆投資）時，你的風險承受度是？',
-                options: [
-                    {
-                        text: '穩健求勝：除非有90%以上的把握與足夠的安全預備金，否則不輕易離開舒適圈或改變現狀。',
-                        tag: 'A',
-                        weights: { risk: 0.1, stability: 0.9 }
-                    },
-                    {
-                        text: '精算冒險：經過詳細分析評估可控風險後，即使成功率僅60%也願意放手一搏，追求跨越式成長。',
-                        tag: 'B',
-                        weights: { risk: 0.7, stability: 0.5 }
-                    },
-                    {
-                        text: '隨遇而安：不特別做極長遠規劃，相信船到橋頭自然直，遇到機會就勇敢嘗試，享受未知。',
-                        tag: 'C',
-                        weights: { risk: 0.8, stability: 0.2 }
-                    },
-                    {
-                        text: '伴侶共識優先：個人風險偏好不重要，只要伴侶有強烈不安感，自己就會選擇保守方案。',
-                        tag: 'D',
-                        weights: { risk: 0.3, stability: 0.7 }
-                    }
-                ],
-                tips: '風險承受度不一致時，保守方提供煞車，冒險方提供油門，關鍵是建構能讓雙方都安心的停損點。'
-            },
-            {
-                id: 'q5',
-                category: 'family',
-                categoryName: '感情與界線',
-                icon: 'heart-handshake',
-                title: '對於交往/結婚後，與異性朋友（或前任）相處的界線與分寸，你的看法是？',
-                options: [
-                    {
-                        text: '嚴格絕對避嫌：盡可能不私下單獨約會，保持距離與禮貌，避免任何可能引發誤會的舉動。',
-                        tag: 'A',
-                        weights: { boundary: 0.9, freedom: 0.1 }
-                    },
-                    {
-                        text: '透明化報備：可以單獨與異性朋友吃飯或聯繫，但必須事先主動報備，且行程對伴侶完全透明。',
-                        tag: 'B',
-                        weights: { boundary: 0.6, freedom: 0.5 }
-                    },
-                    {
-                        text: '融入社交圈：鼓勵將異性朋友介紹給伴侶認識，轉化為「雙方的共同朋友」，大家一起玩。',
-                        tag: 'C',
-                        weights: { boundary: 0.4, freedom: 0.7 }
-                    },
-                    {
-                        text: '完全基於信任：每個人都是獨立個體，不需要過度監控或報備，各自擁有完全自由的社交空間。',
-                        tag: 'D',
-                        weights: { boundary: 0.1, freedom: 0.9 }
-                    }
-                ],
-                tips: '界線沒有標準答案，安全感來自於「雙方對界線標準的理解一致」，並尊重彼此的感受。'
-            },
-            {
-                id: 'q6',
-                category: 'family',
-                categoryName: '家庭與姻親',
-                icon: 'users',
-                title: '對於原生家庭（父母/長輩）在你們未來生活中的參與度與邊界，你的原則是？',
-                options: [
-                    {
-                        text: '小家庭絕對優先：伴侶與自己的新家庭高於一切，遇長輩干涉時，自己會站第一線堅決隔絕壓力。',
-                        tag: 'A',
-                        weights: { familyBoundary: 0.9, filial: 0.2 }
-                    },
-                    {
-                        text: '圓融溝通：尊重長輩意見，盡量尋求折衷方案，希望伴侶也能展現孝順與彈性，維持表面和睦。',
-                        tag: 'B',
-                        weights: { familyBoundary: 0.5, filial: 0.7 }
-                    },
-                    {
-                        text: '緊密相依：原生家庭非常重要，希望逢年過節或週末能頻繁聚會，甚至不排除未來同住或鄰近照顧。',
-                        tag: 'C',
-                        weights: { familyBoundary: 0.1, filial: 0.9 }
-                    },
-                    {
-                        text: '各自獨立處理：自己的父母自己坦，各自處理好自己原生家庭的情緒與需求，不強求對方迎合。',
-                        tag: 'D',
-                        weights: { familyBoundary: 0.8, filial: 0.4 }
-                    }
-                ],
-                tips: '原生家庭邊界是婚姻/長期關係常引發風暴之處，「自己的父母自己坦」通常是最佳防火牆。'
-            },
-            {
-                id: 'q7',
-                category: 'family',
-                categoryName: '生育與寵物',
-                icon: 'baby',
-                title: '對於未來是否生育小孩，以及家庭成員（寵物/小孩）的規劃？',
-                options: [
-                    {
-                        text: '堅定丁克族 (DINK)：傾向不生小孩，享受高品質的二人世界，可養寵物陪伴。',
-                        tag: 'A',
-                        weights: { kids: 0.0, pets: 0.8 }
-                    },
-                    {
-                        text: '積極育兒派：渴望擁有小孩，認為陪伴孩子成長是人生重要的經歷與責任，願意為此付出一切。',
-                        tag: 'B',
-                        weights: { kids: 1.0, pets: 0.5 }
-                    },
-                    {
-                        text: '順其自然：不強求也不排斥，若經濟條件與心理準備充足就生，否則兩人過得開心最重要。',
-                        tag: 'C',
-                        weights: { kids: 0.5, pets: 0.5 }
-                    },
-                    {
-                        text: '毛孩即家人：比起生小孩更想當「寵物家長」，將心力與資源投注在寵物身上。',
-                        tag: 'D',
-                        weights: { kids: 0.2, pets: 1.0 }
-                    }
-                ],
-                tips: '生孕抉擇屬於不可逆的重大價值觀，若分歧較大，需要深層討論背後的理由與代價負擔。'
-            },
-            {
-                id: 'q8',
-                category: 'lifestyle',
-                categoryName: '生活節奏與獨處',
-                icon: 'coffee',
-                title: '在經過忙碌的一整週工作後，你最理想的週末充電模式是？',
-                options: [
-                    {
-                        text: '高強度宅家：幾乎不出門，窩在沙發看劇、玩遊戲或讀書，極度需要充足的個人獨處空間。',
-                        tag: 'A',
-                        weights: { socialEnergy: 0.1, indoor: 0.9 }
-                    },
-                    {
-                        text: '戶外與探索：喜歡戶外活動、登山露營或去沒去過的地方展現活力，待在家裡會覺得虛度光陰。',
-                        tag: 'B',
-                        weights: { socialEnergy: 0.8, indoor: 0.1 }
-                    },
-                    {
-                        text: '社交聚會：安排與朋友開派對、聚餐或參加社交活動，透過與人群互動獲得能量。',
-                        tag: 'C',
-                        weights: { socialEnergy: 0.9, indoor: 0.3 }
-                    },
-                    {
-                        text: '高品質雙人時光：不一定要出門，但希望兩人有高密度的陪伴（如一起做飯、深度聊天或小約會）。',
-                        tag: 'D',
-                        weights: { socialEnergy: 0.4, indoor: 0.6 }
-                    }
-                ],
-                tips: '內向充電型與外向社交型相處時，關鍵是給予彼此「不必強求同步」的自由充電時間。'
-            },
-            {
-                id: 'q9',
-                category: 'lifestyle',
-                categoryName: '家務分工與生活細節',
-                icon: 'home',
-                title: '對於同居或婚姻生活中的家務分工與生活整潔度標準，你的態度是？',
-                options: [
-                    {
-                        text: '高標準潔癖：對整潔度有要求，提倡「隨手清理、定期大掃除」，希望兩人嚴格明確分工。',
-                        tag: 'A',
-                        weights: { neatness: 0.9, delegation: 0.3 }
-                    },
-                    {
-                        text: '科技/外包解決：能用掃地機器人、洗碗機處理的就用科技，必要時請家事清潔員，花錢買和平。',
-                        tag: 'B',
-                        weights: { neatness: 0.7, delegation: 0.9 }
-                    },
-                    {
-                        text: '抓大放小：維持基本衛生活即可，衣服堆兩天無所謂，舒適輕鬆最重要，反對為了家務吵架。',
-                        tag: 'C',
-                        weights: { neatness: 0.3, delegation: 0.2 }
-                    },
-                    {
-                        text: '互補自動自發：不刻意列清單分配，誰有空誰看不下去就順手做，互相體諒默契運作。',
-                        tag: 'D',
-                        weights: { neatness: 0.5, delegation: 0.5 }
-                    }
-                ],
-                tips: '家務摩擦多來自「標準不同」而非「不想做」。善用洗碗機、掃地機等科技家電能大幅減少衝突。'
-            },
-            {
-                id: 'q10',
-                category: 'lifestyle',
-                categoryName: '衝突溝通哲學',
-                icon: 'message-square',
-                title: '當兩人在關係中發生嚴重爭執或情緒上頭時，你的第一直覺溝通模式是？',
-                options: [
-                    {
-                        text: '當下即刻解決：無法忍受隔夜仇或冷戰，必須當下把問題講清楚，哪怕情緒激烈也要有結果。',
-                        tag: 'A',
-                        weights: { coolDown: 0.1, directness: 0.9 }
-                    },
-                    {
-                        text: '先冷靜退場：需要先獨處思考、消化情緒（冷靜數小時至一天），待理智恢復後再平心靜氣討論。',
-                        tag: 'B',
-                        weights: { coolDown: 0.9, directness: 0.4 }
-                    },
-                    {
-                        text: '軟化示好優先：先不論對錯，透過擁抱、幽默或給對方階梯下軟化氣氛，待情緒好轉後再談事情。',
-                        tag: 'C',
-                        weights: { coolDown: 0.5, directness: 0.5 }
-                    },
-                    {
-                        text: '文字梳理溝通：面對面容易講出傷害性的狠話，更偏好透過長文字或信件精準表達內心想法。',
-                        tag: 'D',
-                        weights: { coolDown: 0.7, directness: 0.7 }
-                    }
-                ],
-                tips: '「追逐型（想立刻講）」與「迴避型（想先冷靜）」組合時，冷靜方應給予明確時間承諾（如：給我兩小時後我們談），能給予對方安全感。'
-            }
-        ];
+    // App State
+    let userRole = 'A'; // 'A': Initializer, 'B': Invitee
+    let answersA = [];
+    let answersB = [];
+    let nameA = 'Person A';
+    let nameB = 'Person B';
+    let currentQ = 0;
+    let tempAnswers = new Array(12).fill(null);
 
-        /**
-         * Application State Management
-         */
-        class CompatibilityApp {
-            constructor() {
-                this.mode = 'same_device'; // 'same_device' | 'code_share'
-                this.p1Name = 'Alex';
-                this.p2Name = 'Taylor';
-                this.currentQuestionIdx = 0;
-                this.activePlayer = 1; // 1 or 2
-                
-                // Answers store: { qId: optionTag }
-                this.p1Answers = {};
-                this.p2Answers = {};
-                
-                this.hasPartnerData = false;
-                this.chartInstance = null;
+    // DOM Elements
+    const viewWelcome = document.getElementById('view-welcome');
+    const viewQuiz = document.getElementById('view-quiz');
+    const viewSingleDone = document.getElementById('view-single-done');
+    const viewResult = document.getElementById('view-result');
+    const modeBanner = document.getElementById('mode-banner');
 
-                this.initUI();
-            }
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      parseUrlParams();
+    });
 
-            initUI() {
-                lucide.createIcons();
-                this.updateModeUI();
-            }
+    function parseUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
 
-            selectMode(mode) {
-                this.mode = mode;
-                this.updateModeUI();
-            }
-
-            updateModeUI() {
-                const btnSame = document.getElementById('btn-mode-same');
-                const btnCode = document.getElementById('btn-mode-code');
-                const p2Block = document.getElementById('p2-input-block');
-                const importBlock = document.getElementById('import-code-block');
-
-                if (this.mode === 'same_device') {
-                    btnSame.classList.add('border-brand-500', 'bg-brand-50/50');
-                    btnSame.classList.remove('border-stone-200');
-                    btnCode.classList.remove('border-brand-500', 'bg-brand-50/50');
-                    btnCode.classList.add('border-stone-200');
-
-                    p2Block.classList.remove('hidden');
-                    importBlock.classList.add('hidden');
-                } else {
-                    btnCode.classList.add('border-brand-500', 'bg-brand-50/50');
-                    btnCode.classList.remove('border-stone-200');
-                    btnSame.classList.remove('border-brand-500', 'bg-brand-50/50');
-                    btnSame.classList.add('border-stone-200');
-
-                    p2Block.classList.add('hidden');
-                    importBlock.classList.remove('hidden');
-                }
-            }
-
-            importPartnerCode() {
-                const codeInput = document.getElementById('input-partner-code').value.trim();
-                if (!codeInput) {
-                    alert('請輸入夥伴提供的答案代碼');
-                    return;
-                }
-
-                try {
-                    const decoded = JSON.parse(atob(codeInput));
-                    if (decoded && decoded.answers && decoded.name) {
-                        this.p2Answers = decoded.answers;
-                        this.p2Name = decoded.name;
-                        this.hasPartnerData = true;
-                        
-                        document.getElementById('code-status-msg').classList.remove('hidden');
-                        document.getElementById('code-status-msg').innerText = `✓ 已成功載入 ${this.p2Name} 的答案！`;
-                    } else {
-                        throw new Error('格式不正確');
-                    }
-                } catch (e) {
-                    alert('無效的答案代碼，請確認複製完整。');
-                }
-            }
-
-            startQuiz() {
-                const p1Input = document.getElementById('input-p1-name').value.trim();
-                const p2Input = document.getElementById('input-p2-name').value.trim();
-
-                this.p1Name = p1Input || 'Player 1';
-                if (this.mode === 'same_device') {
-                    this.p2Name = p2Input || 'Player 2';
-                }
-
-                this.activePlayer = 1;
-                this.currentQuestionIdx = 0;
-
-                this.switchView('quiz');
-                this.renderQuestion();
-            }
-
-            switchView(viewName) {
-                document.getElementById('view-home').classList.add('hidden');
-                document.getElementById('view-quiz').classList.add('hidden');
-                document.getElementById('view-transition').classList.add('hidden');
-                document.getElementById('view-report').classList.add('hidden');
-
-                document.getElementById(`view-${viewName}`).classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            renderQuestion() {
-                const q = QUESTIONS_DATA[this.currentQuestionIdx];
-                const activeAnswers = this.activePlayer === 1 ? this.p1Answers : this.p2Answers;
-                const activeName = this.activePlayer === 1 ? this.p1Name : this.p2Name;
-
-                // Progress UI
-                document.getElementById('quiz-player-tag').innerText = `${activeName} 的答題回合`;
-                document.getElementById('quiz-progress-text').innerText = `問題 ${this.currentQuestionIdx + 1} / ${QUESTIONS_DATA.length}`;
-                const pct = ((this.currentQuestionIdx + 1) / QUESTIONS_DATA.length) * 100;
-                document.getElementById('quiz-progress-bar').style.width = `${pct}%`;
-
-                // Category & Title
-                document.getElementById('q-category-name').innerText = q.categoryName;
-                document.getElementById('q-title').innerText = q.title;
-
-                // Category Icon Update
-                const iconContainer = document.getElementById('q-category-icon');
-                iconContainer.innerHTML = `<i data-lucide="${q.icon}" class="w-4 h-4"></i>`;
-
-                // Render Options
-                const container = document.getElementById('q-options-container');
-                container.innerHTML = '';
-
-                const selectedTag = activeAnswers[q.id];
-
-                q.options.forEach((opt) => {
-                    const isSelected = selectedTag === opt.tag;
-                    const optEl = document.createElement('div');
-                    optEl.className = `option-card p-4 rounded-xl border-2 cursor-pointer flex items-start gap-3 transition ${
-                        isSelected ? 'selected border-brand-500 bg-brand-50/50' : 'border-stone-200 hover:border-brand-200'
-                    }`;
-                    optEl.onclick = () => this.selectOption(q.id, opt.tag);
-
-                    optEl.innerHTML = `
-                        <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
-                            isSelected ? 'border-brand-500 bg-brand-500 text-white' : 'border-stone-300 text-stone-500'
-                        }">
-                            ${opt.tag}
-                        </div>
-                        <div class="text-sm font-medium text-stone-800 leading-relaxed">
-                            ${opt.text}
-                        </div>
-                    `;
-                    container.appendChild(optEl);
-                });
-
-                // Update Prev/Next Button State
-                document.getElementById('btn-prev-q').disabled = this.currentQuestionIdx === 0;
-                
-                lucide.createIcons();
-            }
-
-            selectOption(qId, optionTag) {
-                if (this.activePlayer === 1) {
-                    this.p1Answers[qId] = optionTag;
-                } else {
-                    this.p2Answers[qId] = optionTag;
-                }
-                this.renderQuestion();
-            }
-
-            nextQuestion() {
-                const activeAnswers = this.activePlayer === 1 ? this.p1Answers : this.p2Answers;
-                const currentQId = QUESTIONS_DATA[this.currentQuestionIdx].id;
-
-                if (!activeAnswers[currentQId]) {
-                    alert('請選擇一個最符合您想法的選項！');
-                    return;
-                }
-
-                if (this.currentQuestionIdx < QUESTIONS_DATA.length - 1) {
-                    this.currentQuestionIdx++;
-                    this.renderQuestion();
-                } else {
-                    // Completed set for current player
-                    this.handlePlayerFinish();
-                }
-            }
-
-            prevQuestion() {
-                if (this.currentQuestionIdx > 0) {
-                    this.currentQuestionIdx--;
-                    this.renderQuestion();
-                }
-            }
-
-            handlePlayerFinish() {
-                if (this.activePlayer === 1) {
-                    if (this.mode === 'same_device') {
-                        // Switch to Player 2
-                        this.switchView('transition');
-                        document.getElementById('trans-title').innerText = `${this.p1Name} 已完成回答！`;
-                        document.getElementById('trans-desc').innerText = `接下來請將裝置交給 ${this.p2Name} 進行回答。`;
-                        document.getElementById('partner-name-display').innerText = this.p2Name;
-                        document.getElementById('trans-same-device').classList.remove('hidden');
-                        document.getElementById('trans-code-export').classList.add('hidden');
-                    } else if (this.hasPartnerData) {
-                        // Partner code already imported! Directly compute.
-                        this.generateReport();
-                    } else {
-                        // Code Share mode - Show Export Code
-                        this.switchView('transition');
-                        document.getElementById('trans-title').innerText = `${this.p1Name} 的回答已儲存！`;
-                        document.getElementById('trans-desc').innerText = `請複製下方代碼傳送給對方，或在首頁貼上對方的代碼。`;
-                        document.getElementById('trans-same-device').classList.add('hidden');
-                        document.getElementById('trans-code-export').classList.remove('hidden');
-
-                        const payload = {
-                            name: this.p1Name,
-                            answers: this.p1Answers
-                        };
-                        const encoded = btoa(JSON.stringify(payload));
-                        document.getElementById('export-code-input').value = encoded;
-                    }
-                } else {
-                    // Player 2 finished -> Generate Analysis
-                    this.generateReport();
-                }
-            }
-
-            startPartnerTurn() {
-                this.activePlayer = 2;
-                this.currentQuestionIdx = 0;
-                this.switchView('quiz');
-                this.renderQuestion();
-            }
-
-            copyCode() {
-                const codeInput = document.getElementById('export-code-input');
-                codeInput.select();
-                document.execCommand('copy');
-                alert('代碼已複製到剪貼簿！');
-            }
-
-            generateReport() {
-                this.switchView('report');
-
-                // Update Report Names
-                document.getElementById('report-names').innerText = `${this.p1Name} & ${this.p2Name}`;
-
-                // Calculate Compatibility Scores
-                let totalScoreSum = 0;
-                let categoryScores = {
-                    money: { total: 0, count: 0 },
-                    life: { total: 0, count: 0 },
-                    family: { total: 0, count: 0 },
-                    lifestyle: { total: 0, count: 0 }
-                };
-
-                const sweetSpots = [];
-                const frictionPoints = [];
-                const detailedItems = [];
-
-                QUESTIONS_DATA.forEach((q) => {
-                    const tag1 = this.p1Answers[q.id];
-                    const tag2 = this.p2Answers[q.id];
-
-                    const opt1 = q.options.find(o => o.tag === tag1);
-                    const opt2 = q.options.find(o => o.tag === tag2);
-
-                    // Proximity score calculation
-                    let matchScore = 0; // 0 to 100
-                    if (tag1 === tag2) {
-                        matchScore = 100; // Perfect match
-                    } else {
-                        // Weighted distance calculation
-                        matchScore = this.calculateWeightProximity(opt1.weights, opt2.weights);
-                    }
-
-                    totalScoreSum += matchScore;
-                    categoryScores[q.category].total += matchScore;
-                    categoryScores[q.category].count += 1;
-
-                    // Classify into Sweet spot or Friction
-                    if (matchScore >= 85) {
-                        sweetSpots.push({
-                            title: q.title,
-                            category: q.categoryName,
-                            desc: `雙方均傾向相同的選擇理念。`
-                        });
-                    } else if (matchScore <= 55) {
-                        frictionPoints.push({
-                            title: q.title,
-                            category: q.categoryName,
-                            p1Choice: opt1.text,
-                            p2Choice: opt2.text,
-                            tips: q.tips
-                        });
-                    }
-
-                    detailedItems.push({
-                        question: q.title,
-                        category: q.categoryName,
-                        p1Choice: opt1.text,
-                        p2Choice: opt2.text,
-                        score: matchScore,
-                        tips: q.tips
-                    });
-                });
-
-                // Overall Score Percentage
-                const overallPercentage = Math.round(totalScoreSum / QUESTIONS_DATA.length);
-                document.getElementById('score-percentage').innerText = overallPercentage;
-
-                // Tagline & Description based on score
-                let tagline = '';
-                let desc = '';
-                if (overallPercentage >= 85) {
-                    tagline = '🌟 靈魂契合共鳴者';
-                    desc = '你們在絕大多數核心價值觀與日常細節上展現出驚人的默契！能夠相知相惜，建立極度穩固且和諧的長期夥伴關係。';
-                } else if (overallPercentage >= 70) {
-                    tagline = '🌿 互相包容的互補夥伴';
-                    desc = '你們在核心方向上一致，同時保有各自的獨特性。只要在少數分歧點保持開放溝通，差異將成為成長的養分。';
-                } else if (overallPercentage >= 55) {
-                    tagline = '🧩 需要深度磨合與共識';
-                    desc = '你們在生活步調或價值觀上有顯著光譜差異。這並非不合適，而是需要更多包容、理性規則與傾聽來化解摩擦。';
-                } else {
-                    tagline = '⚡ 價值觀碰撞挑戰型';
-                    desc = '你們的世界觀與生活習慣有許多本質上的不同。若決定攜手，需要建立極強的同理心與「求同存異」的智慧。';
-                }
-
-                document.getElementById('score-tagline').innerText = tagline;
-                document.getElementById('score-description').innerText = desc;
-
-                // Category Averages
-                const catMoney = Math.round(categoryScores.money.total / (categoryScores.money.count || 1));
-                const catLife = Math.round(categoryScores.life.total / (categoryScores.life.count || 1));
-                const catFamily = Math.round(categoryScores.family.total / (categoryScores.family.count || 1));
-                const catLifestyle = Math.round(categoryScores.lifestyle.total / (categoryScores.lifestyle.count || 1));
-
-                document.getElementById('dim-score-money').innerText = `${catMoney}%`;
-                document.getElementById('dim-score-life').innerText = `${catLife}%`;
-                document.getElementById('dim-score-family').innerText = `${catFamily}%`;
-                document.getElementById('dim-score-lifestyle').innerText = `${catLifestyle}%`;
-
-                // Render Sweet Spots
-                const sweetContainer = document.getElementById('sweet-spots-list');
-                sweetContainer.innerHTML = '';
-                if (sweetSpots.length === 0) {
-                    sweetContainer.innerHTML = `<p class="text-stone-400 italic">在深層選項中暫無完全重疊點，但多元光譜能帶給彼此新視野。</p>`;
-                } else {
-                    sweetSpots.forEach(s => {
-                        sweetContainer.innerHTML += `
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border border-emerald-100">
-                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded mr-1">${s.category}</span>
-                                <span class="font-semibold text-stone-800">${s.title}</span>
-                            </div>
-                        `;
-                    });
-                }
-
-                // Render Friction Points
-                const frictionContainer = document.getElementById('friction-points-list');
-                frictionContainer.innerHTML = '';
-                if (frictionPoints.length === 0) {
-                    frictionContainer.innerHTML = `<p class="text-stone-400 italic">無顯著激烈分歧，你們的觀念非常和諧！</p>`;
-                } else {
-                    frictionPoints.forEach(f => {
-                        frictionContainer.innerHTML += `
-                            <div class="bg-amber-50/50 p-3 rounded-lg border border-amber-100 space-y-1">
-                                <div class="font-semibold text-stone-800">${f.title}</div>
-                                <div class="text-[11px] text-stone-600">
-                                    <span class="font-bold text-brand-700">${this.p1Name}:</span> ${f.p1Choice}<br/>
-                                    <span class="font-bold text-stone-700">${this.p2Name}:</span> ${f.p2Choice}
-                                </div>
-                                <div class="text-[11px] text-amber-800 bg-amber-100/60 p-2 rounded mt-1">
-                                    💡 <b>溝通建議：</b>${f.tips}
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                // Render Detailed Comparison Table
-                const detailContainer = document.getElementById('detailed-comparison-list');
-                detailContainer.innerHTML = '';
-                detailedItems.forEach((item, idx) => {
-                    detailContainer.innerHTML += `
-                        <div class="pt-3 first:pt-0">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-xs font-bold text-stone-400">Q${idx + 1}. [${item.category}]</span>
-                                <span class="text-xs font-bold px-2 py-0.5 rounded ${item.score >= 80 ? 'bg-emerald-100 text-emerald-700' : item.score >= 60 ? 'bg-stone-100 text-stone-700' : 'bg-amber-100 text-amber-700'}">
-                                    契合度 ${item.score}%
-                                </span>
-                            </div>
-                            <h5 class="text-sm font-bold text-stone-800 mb-2">${item.question}</h5>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs bg-stone-50 p-3 rounded-xl border border-stone-100">
-                                <div>
-                                    <span class="font-bold text-brand-600">${this.p1Name} 的回答：</span>
-                                    <p class="text-stone-700 mt-0.5">${item.p1Choice}</p>
-                                </div>
-                                <div>
-                                    <span class="font-bold text-stone-700">${this.p2Name} 的回答：</span>
-                                    <p class="text-stone-700 mt-0.5">${item.p2Choice}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                // Render Chart
-                this.renderRadarChart([catMoney, catLife, catFamily, catLifestyle]);
-                lucide.createIcons();
-            }
-
-            calculateWeightProximity(w1, w2) {
-                // Euclidean distance normalized between key weight tags
-                const keys = Object.keys(w1);
-                let distSq = 0;
-                keys.forEach(k => {
-                    if (w2[k] !== undefined) {
-                        distSq += Math.pow(w1[k] - w2[k], 2);
-                    }
-                });
-                const dist = Math.sqrt(distSq);
-                // Convert distance to score (Max dist approx ~1.2)
-                let score = Math.max(30, Math.round(100 - (dist * 50)));
-                return score;
-            }
-
-            renderRadarChart(scores) {
-                const ctx = document.getElementById('radarChart').getContext('2d');
-                if (this.chartInstance) {
-                    this.chartInstance.destroy();
-                }
-
-                this.chartInstance = new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: ['金錢觀念', '人生價值', '感情與家庭', '生活與溝通'],
-                        datasets: [{
-                            label: '契合度 (%)',
-                            data: scores,
-                            backgroundColor: 'rgba(224, 83, 60, 0.2)',
-                            borderColor: '#e0533c',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#e0533c',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#e0533c'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            r: {
-                                angleLines: { color: '#e2e8f0' },
-                                grid: { color: '#f1f5f9' },
-                                pointLabels: {
-                                    font: { size: 12, weight: 'bold' },
-                                    color: '#475569'
-                                },
-                                min: 0,
-                                max: 100,
-                                ticks: { stepSize: 20, display: false }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-
-            resetToHome() {
-                this.p1Answers = {};
-                this.p2Answers = {};
-                this.hasPartnerData = false;
-                this.currentQuestionIdx = 0;
-                this.activePlayer = 1;
-                document.getElementById('code-status-msg').classList.add('hidden');
-                document.getElementById('input-partner-code').value = '';
-                this.switchView('home');
-            }
+      if (dataParam) {
+        try {
+          const decoded = JSON.parse(atob(dataParam));
+          if (decoded.type === 'init') {
+            userRole = 'B';
+            nameA = decoded.name || '發起者';
+            answersA = decoded.ans || [];
+            modeBanner.classList.remove('hidden');
+          } else if (decoded.type === 'result') {
+            // Directly show result if full data is passed
+            showFullResult(decoded);
+          }
+        } catch (e) {
+          console.error("URL Parameter decode failed", e);
         }
+      }
+    }
 
-        // Initialize App on Page Load
-        let app;
-        window.onload = function() {
-            app = new CompatibilityApp();
+    // Event Listeners
+    document.getElementById('btn-start').addEventListener('click', () => {
+      const nameInput = document.getElementById('user-name').value.trim();
+      if (!nameInput) {
+        alert('請輸入您的暱稱稱呼！');
+        return;
+      }
+      if (userRole === 'A') nameA = nameInput;
+      else nameB = nameInput;
+
+      viewWelcome.classList.add('hidden');
+      viewQuiz.classList.remove('hidden');
+      renderQuestion();
+    });
+
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if (currentQ > 0) {
+        currentQ--;
+        renderQuestion();
+      }
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if (tempAnswers[currentQ] === null) return;
+      if (currentQ < questions.length - 1) {
+        currentQ++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    });
+
+    document.getElementById('btn-copy-link').addEventListener('click', () => {
+      const shareUrl = document.getElementById('share-link-text').innerText;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('專屬測驗連結已成功複製到剪貼簿！');
+      });
+    });
+
+    document.getElementById('btn-copy-result-link').addEventListener('click', () => {
+      const fullData = {
+        type: 'result',
+        nA: nameA,
+        nB: nameB,
+        aA: answersA,
+        aB: answersB
+      };
+      const encoded = btoa(encodeURIComponent(JSON.stringify(fullData)));
+      const resultUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+      
+      navigator.clipboard.writeText(resultUrl).then(() => {
+        alert('合拍結果連結已複製！傳給對方開啓即可看到完整報告。');
+      });
+    });
+
+    document.getElementById('btn-import').addEventListener('click', () => {
+      const code = document.getElementById('import-code').value.trim();
+      if (!code) return;
+      try {
+        const decoded = JSON.parse(decodeURIComponent(atob(code)));
+        if (decoded.type === 'result') {
+          showFullResult(decoded);
+        } else {
+          alert('代碼格式不正確！');
+        }
+      } catch (e) {
+        alert('代碼無效，請確認複製完整。');
+      }
+    });
+
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      window.location.href = window.location.origin + window.location.pathname;
+    });
+
+    function renderQuestion() {
+      const q = questions[currentQ];
+      document.getElementById('quiz-progress-text').innerText = `問題 ${currentQ + 1} / ${questions.length}`;
+      document.getElementById('quiz-category-tag').innerText = `【${q.category}】`;
+      document.getElementById('quiz-progress-bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+      document.getElementById('question-text').innerText = q.title;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `option-btn w-full p-4 rounded-xl text-left bg-slate-900/60 border border-slate-700/80 text-slate-200 text-sm flex items-start gap-3 ${tempAnswers[currentQ] === opt.score ? 'selected' : ''}`;
+        btn.innerHTML = `
+          <div class="w-6 h-6 rounded-full border border-slate-500 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
+            ${String.fromCharCode(65 + idx)}
+          </div>
+          <div class="flex-1">${opt.text}</div>
+        `;
+        btn.onclick = () => selectOption(opt.score);
+        container.appendChild(btn);
+      });
+
+      document.getElementById('btn-prev').disabled = currentQ === 0;
+      document.getElementById('btn-next').disabled = tempAnswers[currentQ] === null;
+      document.getElementById('btn-next').innerHTML = currentQ === questions.length - 1 ? '觀看結果 <i class="fa-solid fa-check text-xs"></i>' : '下一題 <i class="fa-solid fa-chevron-right text-xs"></i>';
+    }
+
+    function selectOption(score) {
+      tempAnswers[currentQ] = score;
+      renderQuestion();
+    }
+
+    function finishQuiz() {
+      viewQuiz.classList.add('hidden');
+
+      if (userRole === 'A') {
+        answersA = [...tempAnswers];
+        // Generate Link for B
+        const payload = {
+          type: 'init',
+          name: nameA,
+          ans: answersA
         };
-    </script>
+        const encoded = btoa(JSON.stringify(payload));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+        
+        document.getElementById('share-link-text').innerText = shareUrl;
+        viewSingleDone.classList.remove('hidden');
+      } else {
+        answersB = [...tempAnswers];
+        // Render Result immediately
+        const fullData = {
+          type: 'result',
+          nA: nameA,
+          nB: nameB,
+          aA: answersA,
+          aB: answersB
+        };
+        showFullResult(fullData);
+      }
+    }
+
+    function showFullResult(data) {
+      viewWelcome.classList.add('hidden');
+      viewQuiz.classList.add('hidden');
+      viewSingleDone.classList.add('hidden');
+      viewResult.classList.remove('hidden');
+
+      nameA = data.nA;
+      nameB = data.nB;
+      answersA = data.aA;
+      answersB = data.aB;
+
+      document.getElementById('res-names').innerText = `${nameA} & ${nameB}`;
+
+      // Calculate Scores
+      let totalDiff = 0;
+      const categoryScores = [];
+
+      questions.forEach((q, idx) => {
+        const scoreA = answersA[idx] || 3;
+        const scoreB = answersB[idx] || 3;
+        const diff = Math.abs(scoreA - scoreB); // 0 to 4
+        totalDiff += diff;
+
+        // Similarity per question: 0 diff = 100%, 1 diff = 75%, 2 diff = 50%, 3 diff = 25%, 4 diff = 0%
+        const matchPct = Math.max(0, 100 - (diff * 25));
+        categoryScores.push({
+          category: q.category,
+          match: matchPct,
+          scoreA: scoreA,
+          scoreB: scoreB,
+          optA: q.options.find(o => o.score === scoreA)?.text,
+          optB: q.options.find(o => o.score === scoreB)?.text
+        });
+      });
+
+      // Overall Score
+      const maxPossibleDiff = questions.length * 4; // 48
+      const overallMatch = Math.round(((maxPossibleDiff - totalDiff) / maxPossibleDiff) * 100);
+
+      document.getElementById('res-score').innerText = overallMatch;
+
+      // Comment
+      let comment = "";
+      if (overallMatch >= 85) comment = "✨ 靈魂共鳴！你們價值觀極度高度契合，簡直是天生一對。";
+      else if (overallMatch >= 70) comment = "🌱 相當合拍！大部分核心觀念相近，微小差異能成為互補樂趣。";
+      else if (overallMatch >= 55) comment = "⚖️ 磨合潛力股！存在部分理念分歧，需要多溝通與同理體諒。";
+      else comment = "⚡ 獨特個體！你們的光譜差異較大，需要極高的包容力與互相尊重。";
+      document.getElementById('res-comment').innerText = comment;
+
+      // Render Breakdown
+      const breakdownList = document.getElementById('breakdown-list');
+      breakdownList.innerHTML = '';
+
+      categoryScores.forEach(item => {
+        let tagBg = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        if (item.match < 50) tagBg = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+        else if (item.match < 75) tagBg = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+
+        const div = document.createElement('div');
+        div.className = "p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs";
+        div.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-slate-200">${item.category}</span>
+            <span class="px-2 py-0.5 rounded-full border ${tagBg} font-mono font-bold">契合度 ${item.match}%</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1 text-slate-400">
+            <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+              <span class="text-indigo-400 font-semibold block mb-0.5">${nameA}：</span>
+              ${item.optA}
+            </div>
+            <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+              <span class="text-purple-400 font-semibold block mb-0.5">${nameB}：</span>
+              ${item.optB}
+            </div>
+          </div>
+        `;
+        breakdownList.appendChild(div);
+      });
+
+      // Render Radar Chart
+      renderChart(categoryScores);
+    }
+
+    function renderChart(categoryScores) {
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      const labels = categoryScores.map(c => c.category);
+      const dataA = categoryScores.map(c => c.scoreA);
+      const dataB = categoryScores.map(c => c.scoreB);
+
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: nameA,
+              data: dataA,
+              backgroundColor: 'rgba(99, 102, 241, 0.25)',
+              borderColor: '#6366f1',
+              borderWidth: 2,
+              pointBackgroundColor: '#818cf8'
+            },
+            {
+              label: nameB,
+              data: dataB,
+              backgroundColor: 'rgba(168, 85, 247, 0.25)',
+              borderColor: '#a855f7',
+              borderWidth: 2,
+              pointBackgroundColor: '#c084fc'
+            }
+          ]
+        },
+        options: {
+          scales: {
+            r: {
+              min: 1,
+              max: 5,
+              ticks: { stepSize: 1, display: false },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+              pointLabels: {
+                color: '#94a3b8',
+                font: { size: 10, family: 'Noto Sans TC' }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: '#f8fafc', font: { family: 'Noto Sans TC' } }
+            }
+          },
+          maintainAspectRatio: true
+        }
+      });
+    }
+  </script>
 </body>
 </html>
