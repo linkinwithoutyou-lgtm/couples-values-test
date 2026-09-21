@@ -73,7 +73,7 @@
           </div>
           <h2 class="text-xl font-bold text-slate-100 mb-2">測驗說明與設定</h2>
           <p class="text-slate-300 text-sm max-w-lg mx-auto leading-relaxed">
-            本測驗包含 12 道情境情境題，每題皆有 5 個代表不同傾向的選項。請根據你「最真實的內心想法」選擇，而非選出標準答案。
+            本測驗包含 12 道情境題，每題皆有 5 個代表不同傾向的選項。請根據你「最真實的內心想法」選擇。
           </p>
         </div>
 
@@ -89,9 +89,9 @@
         </div>
 
         <div id="import-box" class="pt-6 border-t border-slate-800 text-center">
-          <p class="text-xs text-slate-400 mb-2">如果你手邊有對方傳給你的「合拍結果代碼」，可在下方查看：</p>
+          <p class="text-xs text-slate-400 mb-2">如果你手邊有對方傳給你的「合拍代碼或短網址」，可在下方貼上查看：</p>
           <div class="flex gap-2 max-w-md mx-auto">
-            <input type="text" id="import-code" placeholder="貼上合拍結果代碼..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200">
+            <input type="text" id="import-code" placeholder="貼上合拍代碼或連結..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200">
             <button id="btn-import" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600">載入報告</button>
           </div>
         </div>
@@ -99,7 +99,6 @@
 
       <!-- View 2: Quiz -->
       <div id="view-quiz" class="hidden space-y-6">
-        <!-- Progress Bar -->
         <div>
           <div class="flex justify-between text-xs text-slate-400 mb-2 font-medium">
             <span id="quiz-progress-text">問題 1 / 12</span>
@@ -110,19 +109,14 @@
           </div>
         </div>
 
-        <!-- Question Title -->
         <div class="py-2">
           <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-100 leading-snug">
             載入問題中...
           </h3>
         </div>
 
-        <!-- Options Container -->
-        <div id="options-container" class="space-y-3">
-          <!-- Options injected via JS -->
-        </div>
+        <div id="options-container" class="space-y-3"></div>
 
-        <!-- Action Buttons -->
         <div class="flex justify-between items-center pt-4 border-t border-slate-800">
           <button id="btn-prev" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
             <i class="fa-solid fa-chevron-left text-xs"></i> 上一題
@@ -134,33 +128,28 @@
         </div>
       </div>
 
-      <!-- View 3: Single Completed (Waiting for Partner) -->
+      <!-- View 3: Single Completed -->
       <div id="view-single-done" class="hidden text-center py-6 space-y-6">
         <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl border border-emerald-500/30">
           <i class="fa-solid fa-check"></i>
         </div>
         <h2 class="text-2xl font-bold text-slate-100">你的回答已順利完成！</h2>
         <p class="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
-          系統已將你的回答加密打包成專屬連結。現在，請將這條連結傳給你的另一半或對象填寫！
+          系統已將你的回答產生為縮短網址。現在請將此連結傳給對方填寫！
         </p>
 
         <div class="p-4 rounded-xl bg-slate-900 border border-slate-700 max-w-md mx-auto space-y-3">
-          <div class="text-xs text-slate-400 font-mono break-all p-2 rounded bg-slate-950 border border-slate-800" id="share-link-text">
-            生成中...
+          <div class="text-sm text-indigo-300 font-mono break-all p-3 rounded bg-slate-950 border border-slate-800 flex items-center justify-center gap-2" id="share-link-text">
+            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產生短網址...
           </div>
           <button id="btn-copy-link" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-link"></i> 複製專屬測驗連結傳給對方
+            <i class="fa-solid fa-link"></i> 複製專屬測驗短網址傳給對方
           </button>
-        </div>
-
-        <div class="pt-4 text-xs text-slate-500">
-          對方填寫完成後，系統會引導對方將「合拍結果」連結或代碼傳回給你！
         </div>
       </div>
 
-      <!-- View 4: Both Completed (Result Report) -->
+      <!-- View 4: Result Report -->
       <div id="view-result" class="hidden space-y-8">
-        <!-- Score Banner -->
         <div class="text-center space-y-2">
           <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold">
             <span id="res-names">Alex & Partner</span> 的合拍報告
@@ -174,7 +163,6 @@
           <p id="res-comment" class="text-base font-medium text-slate-200">正在分析報告...</p>
         </div>
 
-        <!-- Radar Chart Container -->
         <div class="bg-slate-900/60 p-4 md:p-6 rounded-2xl border border-slate-800">
           <h4 class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-chart-pie text-indigo-400"></i> 12 大維度相干分析雷達圖
@@ -184,21 +172,20 @@
           </div>
         </div>
 
-        <!-- Breakdown List -->
         <div class="space-y-4">
           <h4 class="text-sm font-bold text-slate-300 flex items-center gap-2">
             <i class="fa-solid fa-magnifying-glass-chart text-indigo-400"></i> 詳細維度差異分析
           </h4>
-          <div id="breakdown-list" class="space-y-3">
-            <!-- Injected via JS -->
-          </div>
+          <div id="breakdown-list" class="space-y-3"></div>
         </div>
 
-        <!-- Share Result Section -->
         <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-3">
-          <p class="text-xs text-slate-400">若對方還沒看過結果，你可以複製下方「合拍結果連結」傳回給對方：</p>
+          <p class="text-xs text-slate-400">若對方還沒看到結果，可點選下方按鈕複製合拍結果短網址：</p>
+          <div class="text-xs text-indigo-300 font-mono break-all p-2 rounded bg-slate-950 border border-slate-800 mb-2" id="result-link-text">
+            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產生結果網址...
+          </div>
           <button id="btn-copy-result-link" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold rounded-lg text-sm transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-share-nodes"></i> 複製合拍結果連結傳給對方
+            <i class="fa-solid fa-share-nodes"></i> 複製合拍結果短網址
           </button>
         </div>
 
@@ -213,189 +200,54 @@
   </div>
 
   <script>
-    // 12 Deep & Broad Questions with 5 Spectrum Options (Scores 1 to 5)
     const questions = [
-      {
-        id: 0,
-        category: "消費與儲蓄哲學",
-        title: "當有一筆額外的獎金或收入時，你最傾向如何處置？",
-        options: [
-          { score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" },
-          { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" },
-          { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" },
-          { score: 4, text: "大部分用於犒賞自己（旅行、奢侈品、體驗）" },
-          { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }
-        ]
-      },
-      {
-        id: 1,
-        category: "職涯與生活平衡",
-        title: "關於工作與生活的理想平衡，你的真實心態是？",
-        options: [
-          { score: 1, text: "事業優先，為實現目標與成就感願意犧牲大部分休閒" },
-          { score: 2, text: "積極打拼，但希望加班與休假能維持在可控範圍" },
-          { score: 3, text: "界線分明，上班全力以赴，下班徹底關閉工作模式" },
-          { score: 4, text: "生活為主，工作只是維持經濟基礎的工具" },
-          { score: 5, text: "追求自由斜槓，拒絕傳統高壓工作，重視時間自主" }
-        ]
-      },
-      {
-        id: 2,
-        category: "家庭與長輩界線",
-        title: "結婚或長期交往後，與雙方原生家庭的邊界該如何設定？",
-        options: [
-          { score: 1, text: "密切維繫，希望常聚會，甚至同住或鄰近居住" },
-          { score: 2, text: "每週固定聚會，長輩意見應作為重要決策參考" },
-          { score: 3, text: "保持友善且適度距離，節慶聚會，彼此尊重不干涉" },
-          { score: 4, text: "獨立性極高，小家庭決策100%自主，長輩不過問" },
-          { score: 5, text: "盡量減少不必要的家庭聚會，以個人生活圈為主" }
-        ]
-      },
-      {
-        id: 3,
-        category: "衝突與溝通模式",
-        title: "當兩人發生嚴重爭執或情緒對立時，你通常的處理習慣是？",
-        options: [
-          { score: 1, text: "必須當場講清楚說明白，不解決不睡覺" },
-          { score: 2, text: "希望冷靜10分鐘後，當天立刻溝通還原問題" },
-          { score: 3, text: "各自冷靜幾個小時或隔天，待情緒平復再理性討論" },
-          { score: 4, text: "習慣先退讓冷處理，等時間淡化情緒再視情況提" },
-          { score: 5, text: "傾向避免正面衝突，以文字訊息溝通或保持沉默" }
-        ]
-      },
-      {
-        id: 4,
-        category: "社群與異性界線",
-        title: "交往期間，關於與異性朋友（或前任）的互動邊界？",
-        options: [
-          { score: 1, text: "嚴格界線，不可單獨出遊，且應完全斷絕與前任聯絡" },
-          { score: 2, text: "可正常社交，但單獨見面需報備，與前任保持距離" },
-          { score: 3, text: "只要坦誠公開，不介意對方與異性單獨吃飯或聯絡" },
-          { score: 4, text: "給予完全信任，無需特別報備朋友社交行程" },
-          { score: 5, text: "認為前任也能做普通朋友，界線全憑個人自律" }
-        ]
-      },
-      {
-        id: 5,
-        category: "育兒與家庭藍圖",
-        title: "對於未來是否生育子女與照顧責任的看法？",
-        options: [
-          { score: 1, text: "一定要有小孩，且願意為孩子大幅調整職涯與生活" },
-          { score: 2, text: "希望有小孩，但需在經濟與生活條件成熟時規劃" },
-          { score: 3, text: "順其自然，有或沒有都能接受，兩人世界也很好" },
-          { score: 4, text: "傾向不生（丁克族），更想享受自由與兩人生活" },
-          { score: 5, text: "堅決不生，比起小孩更想養寵物或專注自我" }
-        ]
-      },
-      {
-        id: 6,
-        category: "住居與生活型態",
-        title: "關於未來理想的居住地與生活居住環境？",
-        options: [
-          { score: 1, text: "繁華市中心高樓大廈，生活機能與便利性第一" },
-          { score: 2, text: "蛋白區或交通方便的住宅區，兼顧機能與空間" },
-          { score: 3, text: "獨棟或寧靜社區，不在乎生活機能，重視生活品質" },
-          { score: 4, text: "郊區或靠近自然，希望有大空間或庭院" },
-          { score: 5, text: "不拘泥於買房，喜歡租屋隨時體驗不同城市或國家" }
-        ]
-      },
-      {
-        id: 7,
-        category: "金錢安全感與風險",
-        title: "對於投資理財與財務風險的承受態度？",
-        options: [
-          { score: 1, text: "極度保守，只選定存、儲蓄險或保守債券" },
-          { score: 2, text: "穩健為主，以高股息ETF、房地產等低波動為主" },
-          { score: 3, text: "均衡配置，定期定額大盤指數與部分個股" },
-          { score: 4, text: "積極追求報酬，願意嘗試飆股、期貨或創業" },
-          { score: 5, text: "高風險高回報，關注高波動資產（如加密貨幣等）" }
-        ]
-      },
-      {
-        id: 8,
-        category: "情趣與親密關係",
-        title: "親密關係（如肢體接觸、性生活）在感情中的重要性與頻率需求？",
-        options: [
-          { score: 1, text: "極度重要，是維繫感情核心，需高頻率與創意" },
-          { score: 2, text: "相當重要，是表達愛意的關鍵方式，希望定期維持" },
-          { score: 3, text: "中等重要，視工作疲累與心情狀況靈活調整" },
-          { score: 4, text: "心靈契合重於肉體，頻率低一些完全沒關係" },
-          { score: 5, text: "不太在意，認為生活默契與陪伴遠比親密行為重要" }
-        ]
-      },
-      {
-        id: 9,
-        category: "信仰與價值理念",
-        title: "若雙方在宗教信仰、政治立場或社會議題看法不同時？",
-        options: [
-          { score: 1, text: "必須價值觀一致，無法接受立場大相逕庭的伴侶" },
-          { score: 2, text: "可以不同，但希望對方能尊重並配合參與自己的活動" },
-          { score: 3, text: "各自獨立，平時各自表達，但不強求改變對方" },
-          { score: 4, text: "盡量在生活中避開爭議話題，求同存異即可" },
-          { score: 5, text: "覺得立場不同更有趣，喜歡深度辯論與思想碰撞" }
-        ]
-      },
-      {
-        id: 10,
-        category: "旅行與休閒哲學",
-        title: "規劃一趟休假旅行時，你最渴望的模式是？",
-        options: [
-          { score: 1, text: "精密行程表，景點美食按時按點高效率解鎖" },
-          { score: 2, text: "重點景點規劃好，中間保留適度彈性時間" },
-          { score: 3, text: "漫遊度假，住在高檔飯店放空，不排強迫性景點" },
-          { score: 4, text: "戶外冒險，露營、登山或探索非主流秘境" },
-          { score: 5, text: "完全隨興，到了當地再決定當天要做什麼" }
-        ]
-      },
-      {
-        id: 11,
-        category: "情緒價值與支持",
-        title: "當你在外面遇到挫折或低潮時，最希望伴侶提供什麼？",
-        options: [
-          { score: 1, text: "理性的分析與解決方案，幫我釐清點出問題" },
-          { score: 2, text: "先給我一個大擁抱與情緒安撫，隨後幫我分析" },
-          { score: 3, text: "純粹的無條件站在我這邊，同仇敵儾聽我傾訴" },
-          { score: 4, text: "什麼都不用多說，默默陪伴或帶我去吃好吃的" },
-          { score: 5, text: "給我獨處的時間與空間，讓我自己消化處理" }
-        ]
-      }
+      { id: 0, category: "消費與儲蓄哲學", title: "當有一筆額外的獎金或收入時，你最傾向如何處置？", options: [{ score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" }, { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" }, { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" }, { score: 4, text: "大部分用於犒賞自己（旅行、奢侈品、體驗）" }, { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }] },
+      { id: 1, category: "職涯與生活平衡", title: "關於工作與生活的理想平衡，你的真實心態是？", options: [{ score: 1, text: "事業優先，為實現目標與成就感願意犧牲大部分休閒" }, { score: 2, text: "積極打拼，但希望加班與休假能維持在可控範圍" }, { score: 3, text: "界線分明，上班全力以赴，下班徹底關閉工作模式" }, { score: 4, text: "生活為主，工作只是維持經濟基礎的工具" }, { score: 5, text: "追求自由斜槓，拒絕傳統高壓工作，重視時間自主" }] },
+      { id: 2, category: "家庭與長輩界線", title: "結婚或長期交往後，與雙方原生家庭的邊界該如何設定？", options: [{ score: 1, text: "密切維繫，希望常聚會，甚至同住或鄰近居住" }, { score: 2, text: "每週固定聚會，長輩意見應作為重要決策參考" }, { score: 3, text: "保持友善且適度距離，節慶聚會，彼此尊重不干涉" }, { score: 4, text: "獨立性極高，小家庭決策100%自主，長輩不過問" }, { score: 5, text: "盡量減少不必要的家庭聚會，以個人生活圈為主" }] },
+      { id: 3, category: "衝突與溝通模式", title: "當兩人發生嚴重爭執或情緒對立時，你通常的處理習慣是？", options: [{ score: 1, text: "必須當場講清楚說明白，不解決不睡覺" }, { score: 2, text: "希望冷靜10分鐘後，當天立刻溝通還原問題" }, { score: 3, text: "各自冷靜幾個小時或隔天，待情緒平復再理性討論" }, { score: 4, text: "習慣先退讓冷處理，等時間淡化情緒再視情況提" }, { score: 5, text: "傾向避免正面衝突，以文字訊息溝通或保持沉默" }] },
+      { id: 4, category: "社群與異性界線", title: "交往期間，關於與異性朋友（或前任）的互動邊界？", options: [{ score: 1, text: "嚴格界線，不可單獨出遊，且應完全斷絕與前任聯絡" }, { score: 2, text: "可正常社交，但單獨見面需報備，與前任保持距離" }, { score: 3, text: "只要坦誠公開，不介意對方與異性單獨吃飯或聯絡" }, { score: 4, text: "給予完全信任，無需特別報備朋友社交行程" }, { score: 5, text: "認為前任也能做普通朋友，界線全憑個人自律" }] },
+      { id: 5, category: "育兒與家庭藍圖", title: "對於未來是否生育子女與照顧責任的看法？", options: [{ score: 1, text: "一定要有小孩，且願意為孩子大幅調整職涯與生活" }, { score: 2, text: "希望有小孩，但需在經濟與生活條件成熟時規劃" }, { score: 3, text: "順其自然，有或沒有都能接受，兩人世界也很好" }, { score: 4, text: "傾向不生（丁克族），更想享受自由與兩人生活" }, { score: 5, text: "堅決不生，比起小孩更想養寵物或專注自我" }] },
+      { id: 6, category: "住居與生活型態", title: "關於未來理想的居住地與生活居住環境？", options: [{ score: 1, text: "繁華市中心高樓大廈，生活機能與便利性第一" }, { score: 2, text: "蛋白區或交通方便的住宅區，兼顧機能與空間" }, { score: 3, text: "獨棟或寧靜社區，不在乎生活機能，重視生活品質" }, { score: 4, text: "郊區或靠近自然，希望有大空間或庭院" }, { score: 5, text: "不拘泥於買房，喜歡租屋隨時體驗不同城市或國家" }] },
+      { id: 7, category: "金錢安全感與風險", title: "對於投資理財與風險的承受態度？", options: [{ score: 1, text: "極度保守，只選定存、儲蓄險或保守債券" }, { score: 2, text: "穩健為主，以高股息ETF、房地產等低波動為主" }, { score: 3, text: "均衡配置，定期定額大盤指數與部分個股" }, { score: 4, text: "積極追求報酬，願意嘗試飆股、期貨或創業" }, { score: 5, text: "高風險高回報，關注高波動資產（如加密貨幣等）" }] },
+      { id: 8, category: "情趣與親密關係", title: "親密關係在感情中的重要性與頻率需求？", options: [{ score: 1, text: "極度重要，是維繫感情核心，需高頻率與創意" }, { score: 2, text: "相當重要，是表達愛意的關鍵方式，希望定期維持" }, { score: 3, text: "中等重要，視工作疲累與心情狀況靈活調整" }, { score: 4, text: "心靈契合重於肉體，頻率低一些完全沒關係" }, { score: 5, text: "不太在意，認為生活默契與陪伴遠比親密行為重要" }] },
+      { id: 9, category: "信仰與價值理念", title: "若雙方在宗教信仰、政治立場或社會議題看法不同時？", options: [{ score: 1, text: "必須價值觀一致，無法接受立場大相逕庭的伴侶" }, { score: 2, text: "可以不同，但希望對方能尊重並配合參與自己的活動" }, { score: 3, text: "各自獨立，平時各自表達，但不強求改變對方" }, { score: 4, text: "盡量在生活中避開爭議話題，求同存異即可" }, { score: 5, text: "覺得立場不同更有趣，喜歡深度辯論與思想碰撞" }] },
+      { id: 10, category: "旅行與休閒哲學", title: "規劃一趟休假旅行時，你最渴望的模式是？", options: [{ score: 1, text: "精密行程表，景點美食按時按點高效率解鎖" }, { score: 2, text: "重點景點規劃好，中間保留適度彈性時間" }, { score: 3, text: "漫遊度假，住在高檔飯店放空，不排強迫性景點" }, { score: 4, text: "戶外冒險，露營、登山或探索非主流秘境" }, { score: 5, text: "完全隨興，到了當地再決定當天要做什麼" }] },
+      { id: 11, category: "情緒價值與支持", title: "當你在外面遇到挫折或低潮時，最希望伴侶提供什麼？", options: [{ score: 1, text: "理性的分析與解決方案，幫我釐清點出問題" }, { score: 2, text: "先給我一個大擁抱與情緒安撫，隨後幫我分析" }, { score: 3, text: "純粹的無條件站在我這邊，同仇敵儾聽我傾訴" }, { score: 4, text: "什麼都不用多說，默默陪伴或帶我去吃好吃的" }, { score: 5, text: "給我獨處的時間與空間，讓我自己消化處理" }] }
     ];
 
-    // App State
-    let userRole = 'A'; // 'A': Initializer, 'B': Invitee
+    let userRole = 'A';
     let answersA = [];
     let answersB = [];
     let nameA = 'Person A';
     let nameB = 'Person B';
     let currentQ = 0;
     let tempAnswers = new Array(12).fill(null);
+    let generatedShortUrl = '';
+    let generatedResultShortUrl = '';
 
-    // DOM Elements
     const viewWelcome = document.getElementById('view-welcome');
     const viewQuiz = document.getElementById('view-quiz');
     const viewSingleDone = document.getElementById('view-single-done');
     const viewResult = document.getElementById('view-result');
     const modeBanner = document.getElementById('mode-banner');
 
-    // Init
     window.addEventListener('DOMContentLoaded', () => {
       parseUrlParams();
     });
 
     function parseUrlParams() {
       const urlParams = new URLSearchParams(window.location.search);
-      const dataParam = urlParams.get('data');
+      const dataParam = urlParams.get('d') || urlParams.get('data');
 
       if (dataParam) {
         try {
-          const decoded = JSON.parse(atob(dataParam));
-          if (decoded.type === 'init') {
+          const decoded = JSON.parse(decodeURIComponent(atob(dataParam)));
+          if (decoded.t === 'init' || decoded.type === 'init') {
             userRole = 'B';
-            nameA = decoded.name || '發起者';
-            answersA = decoded.ans || [];
+            nameA = decoded.n || decoded.name || '發起者';
+            answersA = decoded.a || decoded.ans || [];
             modeBanner.classList.remove('hidden');
-          } else if (decoded.type === 'result') {
-            // Directly show result if full data is passed
+          } else if (decoded.t === 'res' || decoded.type === 'result') {
             showFullResult(decoded);
           }
         } catch (e) {
@@ -404,7 +256,18 @@
       }
     }
 
-    // Event Listeners
+    // 縮網址 API (使用 is.gd 免費服務)
+    async function shortenUrl(longUrl) {
+      try {
+        const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
+        const data = await res.json();
+        if (data.shorturl) return data.shorturl;
+      } catch (e) {
+        console.warn("縮網址服務失敗，回退至完整 URL", e);
+      }
+      return longUrl;
+    }
+
     document.getElementById('btn-start').addEventListener('click', () => {
       const nameInput = document.getElementById('user-name').value.trim();
       if (!nameInput) {
@@ -420,10 +283,7 @@
     });
 
     document.getElementById('btn-prev').addEventListener('click', () => {
-      if (currentQ > 0) {
-        currentQ--;
-        renderQuestion();
-      }
+      if (currentQ > 0) { currentQ--; renderQuestion(); }
     });
 
     document.getElementById('btn-next').addEventListener('click', () => {
@@ -437,40 +297,36 @@
     });
 
     document.getElementById('btn-copy-link').addEventListener('click', () => {
-      const shareUrl = document.getElementById('share-link-text').innerText;
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        alert('專屬測驗連結已成功複製到剪貼簿！');
+      navigator.clipboard.writeText(generatedShortUrl).then(() => {
+        alert('專屬測驗連結已成功複製！可直接貼給對方開啓。');
       });
     });
 
     document.getElementById('btn-copy-result-link').addEventListener('click', () => {
-      const fullData = {
-        type: 'result',
-        nA: nameA,
-        nB: nameB,
-        aA: answersA,
-        aB: answersB
-      };
-      const encoded = btoa(encodeURIComponent(JSON.stringify(fullData)));
-      const resultUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-      
-      navigator.clipboard.writeText(resultUrl).then(() => {
+      navigator.clipboard.writeText(generatedResultShortUrl).then(() => {
         alert('合拍結果連結已複製！傳給對方開啓即可看到完整報告。');
       });
     });
 
     document.getElementById('btn-import').addEventListener('click', () => {
-      const code = document.getElementById('import-code').value.trim();
-      if (!code) return;
+      const inputVal = document.getElementById('import-code').value.trim();
+      if (!inputVal) return;
+      
+      // 如果輸入的是完整 URL 或包含參數的網址
+      if (inputVal.includes('d=') || inputVal.includes('data=')) {
+        window.location.href = inputVal;
+        return;
+      }
+
       try {
-        const decoded = JSON.parse(decodeURIComponent(atob(code)));
-        if (decoded.type === 'result') {
+        const decoded = JSON.parse(decodeURIComponent(atob(inputVal)));
+        if (decoded.t === 'res' || decoded.type === 'result') {
           showFullResult(decoded);
         } else {
           alert('代碼格式不正確！');
         }
       } catch (e) {
-        alert('代碼無效，請確認複製完整。');
+        alert('無效的網址或代碼，請確認複製完整。');
       }
     });
 
@@ -511,37 +367,29 @@
       renderQuestion();
     }
 
-    function finishQuiz() {
+    async function finishQuiz() {
       viewQuiz.classList.add('hidden');
 
       if (userRole === 'A') {
         answersA = [...tempAnswers];
-        // Generate Link for B
-        const payload = {
-          type: 'init',
-          name: nameA,
-          ans: answersA
-        };
-        const encoded = btoa(JSON.stringify(payload));
-        const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+        // 精簡 Key 名稱縮短 JSON 大小
+        const payload = { t: 'init', n: nameA, a: answersA };
+        const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+        const fullUrl = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
         
-        document.getElementById('share-link-text').innerText = shareUrl;
         viewSingleDone.classList.remove('hidden');
+        
+        // 呼叫縮網址 API
+        generatedShortUrl = await shortenUrl(fullUrl);
+        document.getElementById('share-link-text').innerText = generatedShortUrl;
       } else {
         answersB = [...tempAnswers];
-        // Render Result immediately
-        const fullData = {
-          type: 'result',
-          nA: nameA,
-          nB: nameB,
-          aA: answersA,
-          aB: answersB
-        };
+        const fullData = { t: 'res', nA: nameA, nB: nameB, aA: answersA, aB: answersB };
         showFullResult(fullData);
       }
     }
 
-    function showFullResult(data) {
+    async function showFullResult(data) {
       viewWelcome.classList.add('hidden');
       viewQuiz.classList.add('hidden');
       viewSingleDone.classList.add('hidden');
@@ -554,17 +402,26 @@
 
       document.getElementById('res-names').innerText = `${nameA} & ${nameB}`;
 
-      // Calculate Scores
+      // 預先異步產生結果縮網址
+      const rawData = { t: 'res', nA: nameA, nB: nameB, aA: answersA, aB: answersB };
+      const encoded = btoa(encodeURIComponent(JSON.stringify(rawData)));
+      const resultFullUrl = `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+      
+      shortenUrl(resultFullUrl).then(sUrl => {
+        generatedResultShortUrl = sUrl;
+        document.getElementById('result-link-text').innerText = sUrl;
+      });
+
+      // 計算契合度
       let totalDiff = 0;
       const categoryScores = [];
 
       questions.forEach((q, idx) => {
         const scoreA = answersA[idx] || 3;
         const scoreB = answersB[idx] || 3;
-        const diff = Math.abs(scoreA - scoreB); // 0 to 4
+        const diff = Math.abs(scoreA - scoreB);
         totalDiff += diff;
 
-        // Similarity per question: 0 diff = 100%, 1 diff = 75%, 2 diff = 50%, 3 diff = 25%, 4 diff = 0%
         const matchPct = Math.max(0, 100 - (diff * 25));
         categoryScores.push({
           category: q.category,
@@ -576,13 +433,11 @@
         });
       });
 
-      // Overall Score
-      const maxPossibleDiff = questions.length * 4; // 48
+      const maxPossibleDiff = questions.length * 4;
       const overallMatch = Math.round(((maxPossibleDiff - totalDiff) / maxPossibleDiff) * 100);
 
       document.getElementById('res-score').innerText = overallMatch;
 
-      // Comment
       let comment = "";
       if (overallMatch >= 85) comment = "✨ 靈魂共鳴！你們價值觀極度高度契合，簡直是天生一對。";
       else if (overallMatch >= 70) comment = "🌱 相當合拍！大部分核心觀念相近，微小差異能成為互補樂趣。";
@@ -590,7 +445,6 @@
       else comment = "⚡ 獨特個體！你們的光譜差異較大，需要極高的包容力與互相尊重。";
       document.getElementById('res-comment').innerText = comment;
 
-      // Render Breakdown
       const breakdownList = document.getElementById('breakdown-list');
       breakdownList.innerHTML = '';
 
@@ -620,7 +474,6 @@
         breakdownList.appendChild(div);
       });
 
-      // Render Radar Chart
       renderChart(categoryScores);
     }
 
@@ -661,16 +514,11 @@
               ticks: { stepSize: 1, display: false },
               grid: { color: 'rgba(255, 255, 255, 0.1)' },
               angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-              pointLabels: {
-                color: '#94a3b8',
-                font: { size: 10, family: 'Noto Sans TC' }
-              }
+              pointLabels: { color: '#94a3b8', font: { size: 10, family: 'Noto Sans TC' } }
             }
           },
           plugins: {
-            legend: {
-              labels: { color: '#f8fafc', font: { family: 'Noto Sans TC' } }
-            }
+            legend: { labels: { color: '#f8fafc', font: { family: 'Noto Sans TC' } } }
           },
           maintainAspectRatio: true
         }
